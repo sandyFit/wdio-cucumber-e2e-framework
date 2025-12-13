@@ -37,7 +37,7 @@ npm install
 ### 3. Environment is already configured
 The `.env` file contains default values that work out of the box.
 
-## 🧪 Running Tests
+## Running Tests
 
 ### Run all tests
 ```bash
