@@ -13,10 +13,11 @@ class BookingService {
         });
 
         // Track request start time for response time assertions
-        this.client.interceptors.request.use((requiestConfig) => {
-            requiestConfig.metadata = { startTime: Date.now() };
-            return requiestConfig;
+        this.client.interceptors.request.use((requestConfig) => {
+            requestConfig.metadata = { startTime: Date.now() };
+            return requestConfig;
         });
+
 
         // Calculate response time
         this.client.interceptors.response.use((response) => {
@@ -26,7 +27,7 @@ class BookingService {
         });
     };
 
-    
+
 
     /**
      * Create authentication token for protected endpoints
@@ -173,7 +174,7 @@ class BookingService {
         }
     };
 
-
+    // === HELPERS ===
 
     /**
      * Encode credentials for Basic Auth header
@@ -185,14 +186,6 @@ class BookingService {
         return Buffer.from(credentials).toString('base64');
     };
 
-
-
-    /**
-     * Error handler for consistent error format
-     * @private
-     * @param {Error} error - Axios error
-     * @returns {Error} Formatted error
-     */
 
     /**
      * Error handler for consistent error format
@@ -206,7 +199,10 @@ class BookingService {
             const err = new Error(`API Error: ${error.response.status} - ${error.response.statusText}`);
             err.status = error.response.status;
             err.data = error.response.data;
+            err.headers = error.response.headers;
+            err.duration = error.response.duration;
             return err;
+            
         } else if (error.request) {
             // Request made but no response
             return new Error('No response from server');
@@ -216,4 +212,6 @@ class BookingService {
         }
     }
 }
+
+
 module.exports = BookingService;

@@ -182,6 +182,24 @@ describe(']Restful-Booker API Tests', () => {
             expect(error).to.be.undefined;
         });
 
+        it('should return 404 for non-existent booking ID', async () => {
+            try {
+                await bookingService.getBookingById(999999999);
+                expect.fail('Should have thrown an error');
+            } catch (error) {
+                // Assertion 1: Status Code
+                expect(error.status).to.equal(404);
+
+                // Assertion 2: Error message exists
+                expect(error.message).to.include('404');
+
+                // Assertions 3: Proper error handling structure
+                expect(error).to.have.property('status');
+                expect(error.status).to.be.a('number');
+            }
+        });
+    });
+
         /**
      * TEST SUITE 4: Update Booking
      * Tests PUT and PATCH /booking/:id endpoints with authorization
@@ -261,23 +279,7 @@ describe(']Restful-Booker API Tests', () => {
         });
     });
 
-        it('should return 404 for non-existent booking ID', async () => {
-            try {
-                await bookingService.getBookingById(999999999);
-                expect.fail('Should have thrown an error');
-            } catch (error) {
-                // Assertion 1: Status Code
-                expect(error.status).to.equal(404);
-
-                // Assertion 2: Error message exists
-                expect(error.message).to.include('404');
-
-                // Assertions 3: Proper error handling structure
-                expect(error).to.have.property('status');
-                expect(error.status).to.be.a('number');
-            }
-        });
-    });
+        
 
     /**
      * TEST SUITE 5: Delete Booking
@@ -349,9 +351,155 @@ describe(']Restful-Booker API Tests', () => {
             }
         });
 
-
     });
 
+    /**
+     * TEST SUITE 6: Complete CRUD Flow
+     * Tests full Create -> Read -> Update -> Delete lifecycle
+     */
+    describe('Complete CRUD Flow', () => {
+        it('should perform Create -> Read -> Update -> Delete flow', async () => {
+            // Step 1: CREATE
+            const createResponse = await bookingService.createBooking({
+                firstname: 'CRUD',
+                lastname: 'Test',
+                totalprice: 100,
+                depositpaid: true,
+                bookingdates: {
+                    checkin: '2024-04-01',
+                    checkout: '2024-04-05'
+                }
+            });
 
+            expect(createResponse.status).to.equal(200);
+            const bookingId = createResponse.data.bookingid;
+            expect(bookingId).to.be.a('number');
+
+            // Step 2: READ
+            const readResponse = await bookingService.getBookingById(bookingId);
+            expect(readResponse.status).to.equal(200);
+            expect(readResponse.data.firstname).to.equal('CRUD');
+
+            // Step 3: UPDATE
+            const updateResponse = await bookingService.updateBooking(
+                bookingId,
+                {
+                    firstname: 'UpdatedCRUD',
+                    lastname: 'UpdatedTest',
+                    totalprice: 150,
+                    depositpaid: false,
+                    bookingdates: {
+                        checkin: '2024-05-01',
+                        checkout: '2024-05-05'
+                    }
+                },
+                authToken
+            );
+            expect(updateResponse.status).to.equal(200);
+            expect(updateResponse.data.firstname).to.equal('UpdatedCRUD');
+
+            // Step 4: READ again to verify update
+            const readAfterUpdate = await bookingService.getBookingById(bookingId);
+            expect(readAfterUpdate.status).to.equal(200);
+            expect(readAfterUpdate.data.firstname).to.equal('UpdatedCRUD');
+            expect(readAfterUpdate.data.totalprice).to.equal(150);
+
+            // Step 5: DELETE
+            const deleteResponse = await bookingService.deleteBooking(bookingId, authToken);
+            expect(deleteResponse.status).to.equal(201);
+
+            // Step 6: Verify deletion
+            try {
+                await bookingService.getBookingById(bookingId);
+                expect.fail('Booking should be deleted');
+            } catch (error) {
+                expect(error.status).to.equal(404);
+            }
+        });
+        it('should perform CRUD flow with partial update booking', async () => {
+            // CREATE
+            const createResponse = await bookingService.createBooking({
+                firstname: 'Patch',
+                lastname: 'Flow',
+                totalprice: 90,
+                depositpaid: true,
+                bookingdates: {
+                    checkin: '2024-08-01',
+                    checkout: '2024-08-03'
+                }
+            });
+    
+            const bookingId = createResponse.data.bookingid;
+    
+            // UPDATE - PATCH
+            const patchResponse = await bookingService.partialUpdateBooking(
+                bookingId,
+                { totalprice: 200 },
+                authToken
+            );
+            expect(patchResponse.status).to.equal(200);
+    
+            // READ
+            const readResponse = await bookingService.getBookingById(bookingId);
+            expect(readResponse.data.totalprice).to.equal(200);
+    
+            // DELETE
+            await bookingService.deleteBooking(bookingId, authToken);
+        });
+    });
+
+    /**
+     * TEST SUITE 7: Authentication
+     * Tests POST /auth endpoint
+     */
+    describe('Authentication', () => {
+        it('should create authentication token', async () => {
+            const response = await bookingService.createAuthToken();
+
+            // Assertion 1: Status Code
+            expect(response.status).to.equal(200);
+
+            // Assertion 2: Response Time
+            expect(response.duration).to.be.below(config.expectedResponseTime.fast);
+
+            // Assertion 3: Response Headers
+            expect(response.headers).to.have.property('content-type');
+            expect(response.headers['content-type']).to.include('application/json');
+
+            // Assertion 4: Response Body
+            expect(response.data).to.have.property('token');
+            expect(response.data.token).to.be.a('string');
+            expect(response.data.token.length).to.be.greaterThan(0);
+
+            // Assertion 5: Schema Validation
+            const { error } = authTokenSchema.validate(response.data);
+            expect(error).to.be.undefined;
+        });
+        it('should return reason when authentication credentials are invalid', async () => {
+            const response = await bookingService.client.post(config.endpoints.auth, {
+                username: 'invalidUser',
+                password: 'invalidPass'
+            });
+    
+            // Assertion 1: Status Code 200 (Rest Booking behavior for bad credentials)
+            expect(response.status).to.equal(200);
+    
+            // Assertion 2: Response Time
+            expect(response.duration)
+                .to.be.below(config.expectedResponseTime.fast);
+    
+            // Assertion 3: Response Headers
+            expect(response.headers).to.have.property('content-type');
+            expect(response.headers['content-type'])
+                .to.include('application/json');
+    
+            // Assertion 4: Response Body
+            expect(response.data).to.have.property('reason');
+            expect(response.data.reason).to.equal('Bad credentials');
+    
+            // Assertion 5: Ensure token is NOT returned
+            expect(response.data).to.not.have.property('token');
+        });
+    });
 
 });
