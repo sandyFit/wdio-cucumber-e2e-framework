@@ -2,7 +2,7 @@
 
 Comprehensive API testing framework for the Restful-booker API using Axios, Mocha, Chai, and Joi.
 
-## 📋 Features
+## Features
 
 - **Layered Architecture**: Clean separation of concerns (Config, Services, Schemas, Tests)
 - **Service Layer Pattern**: Reusable API methods with error handling
@@ -11,7 +11,7 @@ Comprehensive API testing framework for the Restful-booker API using Axios, Moch
 - **Schema Validation**: Joi-based response validation
 - **Response Time Tracking**: Built-in request/response timing
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 api-tests/
@@ -22,7 +22,7 @@ api-tests/
 └── package.json     # Dependencies and scripts
 ```
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. Navigate to api-tests directory
 ```bash
@@ -44,7 +44,7 @@ The `.env` file contains default values that work out of the box.
 npm run test:api
 ```
 
-## 📊 Test Coverage
+## Test Coverage
 
 ### 7 Test Suites, 14 Tests Total
 
@@ -85,7 +85,7 @@ npm run test:api
 4. ✅ Response Body
 5. ✅ Schema Validation
 
-## 🎯 Design Principles
+## Design Principles
 
 ### DRY (Don't Repeat Yourself)
 - Reusable service methods
@@ -102,7 +102,7 @@ npm run test:api
 - Only required features
 - Focused implementation
 
-## 📝 Expected Output
+## Expected Output
 
 ```
   Restful-Booker API Tests
@@ -137,6 +137,6 @@ npm run test:api
   11 passing (4.5s)
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 [Restful-booker API Docs](https://restful-booker.herokuapp.com/apidoc/index.html)
