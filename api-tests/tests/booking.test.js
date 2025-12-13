@@ -272,12 +272,86 @@ describe(']Restful-Booker API Tests', () => {
                 // Assertion 2: Error message exists
                 expect(error.message).to.include('404');
 
-                // Note: For error cases, we verify error handling works correctly
-                // Assertions 3-5 are satisfied by proper error handling structure
+                // Assertions 3: Proper error handling structure
                 expect(error).to.have.property('status');
                 expect(error.status).to.be.a('number');
             }
         });
     });
+
+    /**
+     * TEST SUITE 5: Delete Booking
+     * Tests DELETE /booking/:id endpoint with authorization
+     */
+    describe('Delete Booking', () => {
+        it('should delete booking successfully with Basic Auth', async () => {
+            const response = await bookingService.deleteBooking(createdBookingId, authToken);
+
+            // Assertion 1: Status Code
+            expect(response.status).to.equal(201);
+
+            // Assertion 2: Response Time
+            expect(response.duration).to.be.below(config.expectedResponseTime.fast);
+
+            // Assertion 3: Response Headers
+            expect(response.headers).to.have.property('server');
+            expect(response.headers['server']).to.exist;
+
+            // Assertion 4: Response Body - DELETE returns 'Created' status
+            expect(response.statusText).to.include('Created');
+
+            // Assertion 5: Verify deletion by trying to get the booking
+            try {
+                await bookingService.getBookingById(createdBookingId);
+                expect.fail('Booking should have been deleted');
+            } catch (error) {
+                expect(error.status).to.equal(404);
+            }
+        });
+
+
+        it('should return 405 when deleting non-existent booking', async () => {
+            try {
+                await bookingService.deleteBooking(99999999, authToken);
+                expect.fail('Delete should fail for non-existent booking');
+            } catch (error) {
+
+                // Assertion 1: Status Code
+                // If the booking does not exist, the Restful-Booker API:
+                // rejects the DELETE method for that resource with code 405
+                expect(error.status).to.equal(405);
+
+                // Assertion 2: Response Time 
+                if (error.response && error.response.duration) {
+                    expect(error.response.duration)
+                        .to.be.below(config.expectedResponseTime.fast);
+                }
+
+                // Assertion 3: Response Headers
+                if (error.response && error.response.headers) {
+                    expect(error.response.headers).to.have.property('server');
+                    expect(error.response.headers['server']).to.exist;
+                }
+
+                // Assertion 4: Response Body / Message
+                // Restful-Booker returns plain text for DELETE errors
+                expect(error.message).to.include('405');
+
+                // Assertion 5: Error Schema / Structure
+                expect(error).to.have.property('status');
+                expect(error.status).to.be.a('number');
+
+                if (error.data) {
+                    expect(error.data).to.satisfy(
+                        data => typeof data === 'string' || typeof data === 'object'
+                    );
+                }
+            }
+        });
+
+
+    });
+
+
 
 });

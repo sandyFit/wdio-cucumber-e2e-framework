@@ -24,7 +24,9 @@ class BookingService {
             response.duration = response.config.metadata.endTime - response.config.metadata.startTime;
             return response;
         });
-    }
+    };
+
+    
 
     /**
      * Create authentication token for protected endpoints
@@ -40,7 +42,9 @@ class BookingService {
         } catch (error) {
             throw this._handleError(error);
         }
-    }
+    };
+
+
 
     /**
      * Get all booking IDs with optional filters
@@ -58,6 +62,8 @@ class BookingService {
         }
     };
 
+
+
     /**
      * Create a new booking
      * @param {Object} bookingData - Booking details
@@ -72,6 +78,8 @@ class BookingService {
         }
     };
 
+
+
     /**
      * Get booking details by ID
      * @param {number} id - Booking ID
@@ -85,6 +93,8 @@ class BookingService {
             throw this._handleError(error);
         }
     };
+
+
 
     /**
     * Update booking (PUT - full update)
@@ -111,6 +121,8 @@ class BookingService {
         }
     };
 
+
+
     /**
      * Partially update booking (PATCH)
      * @param {number} id - Booking ID
@@ -136,7 +148,32 @@ class BookingService {
         }
     };
 
-    
+
+
+    /**
+     * Delete booking
+     * @param {number} id - Booking ID
+     * @param {string} token - Auth token
+     * @returns {Promise} Response
+     */
+    async deleteBooking(id, token) {
+        try {
+            const response = await this.client.delete(
+                config.endpoints.bookingById(id),
+                {
+                    headers: {
+                        'Cookie': `token=${token}`,
+                        'Authorization': `Basic ${this._encodeCredentials()}`
+                    }
+                }
+            );
+            return response;
+        } catch (error) {
+            throw this._handleError(error);
+        }
+    };
+
+
 
     /**
      * Encode credentials for Basic Auth header
