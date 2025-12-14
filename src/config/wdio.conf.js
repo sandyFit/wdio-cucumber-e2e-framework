@@ -58,7 +58,18 @@ export const config = {
     framework: 'cucumber',
     // retry tests 2 times before failing
     specFileRetries: 2, 
-    reporters: ['spec'],
+    reporters: [
+        'spec', // ✅ Shows results in console
+        ['html-nice', {
+            outputDir: './reports/ui-reports/',
+            filename: 'ui-test-report.html',
+            reportTitle: 'UI Test Execution Report',
+            linkScreenshots: true,
+            showInBrowser: false,
+            collapseTests: false,
+            useOnAfterCommandForScreenshot: false
+        }]
+    ],
 
     cucumberOpts: {
         require: [

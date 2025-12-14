@@ -1,1 +1,19 @@
 node_modules
+api-tests/node_modules
+api-tests/.env
+
+# Test Reports
+reports/
+ui-reports/
+mochawesome-report/
+
+# Screenshots
+screenshots/
+errorShots/
+
+# Report Files
+*.json
+wdio-*.log
+
+# WebdriverIO
+.wdio-reports/
