@@ -14,19 +14,6 @@ export async function waitForUrlToContain(path, timeout = 10000) {
     );
 }
 
-/**
- * Wait for URL to match exactly
- */
-// export async function waitForUrl(expectedUrl, timeout = 10000) {
-//     logger.info(`Waiting for URL: ${expectedUrl}`);
-//     return await browser.waitUntil(
-//         async () => (await browser.getUrl()) === expectedUrl,
-//         {
-//             timeout,
-//             timeoutMsg: `URL did not match "${expectedUrl}" within ${timeout}ms`
-//         }
-//     );
-// }
 
 /**
  * Wait for element to be displayed

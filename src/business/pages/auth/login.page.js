@@ -16,7 +16,7 @@ export class LoginPage extends BasePage {
     async open() {
         logger.info('Opening Login page');
         await this.navigateTo('/auth/login');
-        await $('[data-test="email"]').waitForDisplayed({ timeout: 10000 });
+        await $(this.selectors.email).waitForDisplayed({ timeout: 10000 });
     }
 
     /**
