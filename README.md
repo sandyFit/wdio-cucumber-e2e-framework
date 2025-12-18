@@ -31,24 +31,51 @@ Therefore, only **Chrome** and **Firefox** were configured — both in **headles
 ## **Project Structure**
 
 ```
-src/ 
- ├── assertions/            # Custom assertions
- │     ├── signup.assertions.js
- │     ├── login.assertions.js
- │     └── ...
- ├── config                 # Main WDIO configuration
- │     └── wdio.conf.js 
- ├── data/                  # Test data
- ├── helpers/               # Reusable helper functions
- ├── features/              # .feature files (Gherkin)
- │     ├── signup.feature
- │     ├── login.feature
- │     └── ...
- ├── steps/                 # Step definitions
- │     ├── signup.steps.js
- │     ├── login.steps.js
- │     ├── hooks.js
- │     └── ...
+src/
+ ├── business/
+ │    ├── components/            # Reusable UI components
+ │    ├── data/                  # Test data factories
+ │    └── pages/                 # Page Objects
+ │          ├── account/
+ │          │    ├── account.page.js
+ │          │    └── profile.page.js
+ │          ├── auth/
+ │          │    ├── login.page.js
+ │          │    └── signup.page.js
+ │          ├── home/
+ │          │    └── home.page.js
+ │          ├── products/
+ │          │    ├── favorites.page.js
+ │          │    └── product-details.page.js
+ │          └── basePage.js      # Base class for all pages
+ ├── config/
+ │    └── wdio.conf.js           # WDIO configuration
+ ├── core/
+ │    ├── browser/
+ │    └── logger/
+ └── tests/
+      ├── features/              # Gherkin .feature files
+      │    ├── auth/
+      │    │    ├── login.feature
+      │    │    └── signup.feature
+      │    ├── product/
+      │    │    ├── favorites.feature
+      │    │    └── search.feature
+      │    └── ui/
+      │         └── language.feature
+      ├── step-definitions/      # Step definitions (refactored)
+      │    ├── auth/
+      │    │    ├── login.steps.js
+      │    │    ├── profile.steps.js
+      │    │    └── signup.steps.js
+      │    ├── product/
+      │    │    ├── add2Cart.steps.js
+      │    │    ├── favorites.steps.js
+      │    │    └── product-details.steps.js
+      │    └── ui/
+      │         └── language.steps.js
+      └── hooks.js
+  └── hooks.js
            
 ```
 ---
@@ -131,16 +158,27 @@ This means **2 sessions across both Chrome and Firefox** can run simultaneously,
 
 ---
 
+## Chai Integration (Module 5)
+- Added Chai for BDD and TDD style assertions
+- Implemented assert, expect, and should interfaces
+- Added new signup step using Chai
+
+
 ## **Dependencies**
 
 Key packages used:
 
-* `@wdio/cli`
-* `@wdio/local-runner`
-* `@wdio/cucumber-framework`
-* `@wdio/spec-reporter`
-* `@wdio/chromedriver-service`
-* `@wdio/firefox-profile-service`
+## Dependencies
+
+These are the key packages used in this project:
+
+- `@wdio/cli` – WebdriverIO command line interface for running tests.
+- `@wdio/local-runner` – Allows tests to run locally on your machine.
+- `@wdio/cucumber-framework` – Integrates Cucumber with WebdriverIO for BDD-style tests.
+- `@wdio/spec-reporter` – Provides readable test output in the terminal.
+- `@wdio/chromedriver-service` – Manages ChromeDriver for running tests in Chrome.
+- `@wdio/firefox-profile-service` – Manages Firefox profiles for test execution.
+- `chai` – Assertion library for validating test results.
 
 ---
 
