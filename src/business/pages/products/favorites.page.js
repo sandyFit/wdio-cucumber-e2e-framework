@@ -20,7 +20,6 @@ export class FavoritesPage extends AccountPage {
 
     // === DATA GETTERS ===
     async getFavoriteProducts() {
-        logger.info('Getting list of favorite products');
         const products = await this.favoriteProductCards;
         logger.info(`Found ${products.length} favorite products`);
         return products;
@@ -33,11 +32,9 @@ export class FavoritesPage extends AccountPage {
 
     // === LOADERS ===
     async waitForLoaded() {
-        logger.info('Waiting for Favorites page to load');
-
         await this.waitForUrlToContain('/favorites', 10000);
 
-        const loaded = await browser.waitUntil(
+        await browser.waitUntil(
             async () => {
                 const products = await this.favoriteProductCards;
                 return products.length > 0 && await this.isElementDisplayed(products[0]);
@@ -48,17 +45,12 @@ export class FavoritesPage extends AccountPage {
             }
         );
 
-        if (loaded) {
-            logger.info('✅ Favorites page loaded with products');
-        }
     }
 
 
 
     // === NAVIGATION ===
     async open() {
-        logger.info('Opening Favorites page');
-
         await this.navigateTo('/account/favorites');
         await this.waitForPageLoad();
         await this.waitForLoaded();

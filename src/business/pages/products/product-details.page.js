@@ -27,9 +27,7 @@ export class ProductDetailsPage extends BasePage {
 
     // === LOADING ===
     async waitForLoaded() {
-        logger.info('Waiting for Product Details page to load');
         await this.titleEl.waitForDisplayed({ timeout: 10000 });
-        logger.info('Product Details page loaded successfully');
     }
 
     // === PRODUCT INFO ===
@@ -45,13 +43,9 @@ export class ProductDetailsPage extends BasePage {
 
     // === NAVIGATION ===
     async open() {
-        logger.info("Opening Product Details page from Home");
-
         await this.navigateTo('/');
 
         await waitForElementsCount(() => this.productCards, 1, 10000);
-
-        logger.info("Home page loaded — products found");
 
         const firstProduct = (await this.productCards)[0];
         await firstProduct.scrollIntoView();
@@ -69,23 +63,21 @@ export class ProductDetailsPage extends BasePage {
 
     // === ACTIONS ===
     async addToCart() {
-        logger.info('Adding product to cart');
-        await this.clickElement(this.addToCartButtonEl, 'Add to Cart button');
-        await this.pause(1500, 'waiting for toast notification and cart badge update');
+        await this.clickElement(this.addToCartButtonEl);
+        await this.pause(1500);
+        logger.info('Product added successfully');
     }
 
-    async addToFavorites() {
-        logger.info('Adding product to favorites');
-        await this.clickElement(this.addToFavoritesButtonEl, 'Add to Favorites button');
-        await this.pause(1500, 'waiting for toast notification and favorites update');
+    async addToFavorites() {      
+        await this.clickElement(this.addToFavoritesButtonEl);
+        await this.pause(1500);
+        logger.info('Product added to favorites');
     }
 
     async addToFavoritesAndCheck() {
-        logger.info('Adding product to favorites');
         await this.addToFavorites();
 
-        // Wait for any UI feedback or toast message
-        await this.pause(1000, 'waiting for feedback message');
+        await this.pause(1000);
 
         // Check if product was already in favorites
         const bodyText = await this.getElementText($('body'), 'Page body');

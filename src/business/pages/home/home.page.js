@@ -31,14 +31,12 @@ export class HomePage extends BasePage {
 
     // === NAVIGATION ===
     async open() {
-        logger.info('Opening Home page');
         await this.navigateTo('/');
         await this.waitForPageLoad();
         await waitForElementsCount(() => this.productCards, 1, 10000);
 
         const products = await this.productCards;
         await products[0].waitForDisplayed({ timeout: 10000 });
-        logger.info(`Home page loaded with ${products.length} products`);
     }
 
     // === ACTIONS ===
@@ -47,32 +45,30 @@ export class HomePage extends BasePage {
 
         const filtersVisible = await this.isElementDisplayed(this.filtersButton);
         if (filtersVisible) {
-            await this.clickElement(this.filtersButton, 'Filters Button');
+            await this.clickElement(this.filtersButton);
         }
 
         const searchInput = await this.searchInput;
         await this.setInputValueDirectly(searchInput, query, 'Search Input');
 
-        await this.pause(500, 'allowing DOM to stabilize after setting input value');
+        await this.pause(500);
 
         const searchBtn = await this.searchButton;
 
         await searchBtn.waitForExist({ timeout: 5000 });
-        await this.scrollToElement(searchBtn, 'Search Button');
-        await this.pause(300, 'allowing search button to be ready after scroll');
+        await this.scrollToElement(searchBtn);
+        await this.pause(300);
 
         try {
-            await this.clickElement(searchBtn, 'Search Button');
-            logger.info('✅ Search button clicked successfully');
+            await this.clickElement(searchBtn);
         } catch (clickError) {
-            logger.info('⚠️ Normal click failed, using JavaScript click');
+            logger.info('⚠️ Normal click failed, using JavaScript click', clickError);
             await this.executeScript((el) => el.click(), searchBtn);
-            logger.info('✅ JavaScript click succeeded');
         }
     }
 
     async waitForSearchResults() {
-        await this.pause(1500, 'waiting for search filtering to complete');
+        await this.pause(1500);
 
         await waitForElementsCount(() => this.getProducts(), 1, 10000);
 
@@ -82,9 +78,9 @@ export class HomePage extends BasePage {
         if (products.length > 0) {
             try {
                 await products[0].waitForDisplayed({ timeout: 5000 });
-                logger.info('✅ Search results are ready');
+
             } catch (error) {
-                logger.info('⚠️ First product visibility check failed, but continuing');
+                logger.error('⚠️ First product visibility check failed, but continuing', error);
             }
         }
     }
@@ -107,7 +103,7 @@ export class HomePage extends BasePage {
             if (name && name.trim()) {
                 return name.trim();
             }
-        } catch (error) {
+        } catch  {
             // Silent fail, try next method
         }
 
@@ -116,7 +112,7 @@ export class HomePage extends BasePage {
             if (name && name.trim()) {
                 return name.trim();
             }
-        } catch (error) {
+        } catch {
             // Silent fail
         }
 
@@ -124,19 +120,16 @@ export class HomePage extends BasePage {
     }
 
     async openProductDetails(productName) {
-        logger.info(`Opening details for product: ${productName}`);
-
         const productCards = await this.productCards;
-        logger.info(`Found ${productCards.length} product cards`);
 
         for (let i = 0; i < productCards.length; i++) {
             const card = productCards[i];
 
             try {
                 await this.scrollToElement(card, `Product Card ${i}`);
-                await this.pause(100, 'allowing DOM to stabilize after scrolling');
+                await this.pause(100);
 
-                const titleElement = await card.$('[data-test="product-name"]');
+                const titleElement = await card.$(this.selectors.productName);
 
                 const exists = await this.waitForElementExist(titleElement, 500);
 
@@ -145,13 +138,12 @@ export class HomePage extends BasePage {
                 }
 
                 const title = await titleElement.getText();
-                logger.info(`Product ${i}: "${title}"`);
 
                 if (title.toLowerCase().includes(productName.toLowerCase())) {
-                    await this.clickElement(titleElement, `Product: ${title}`);
+                    await this.clickElement(titleElement);
                     return;
                 }
-            } catch (error) {
+            } catch {
                 continue;
             }
         }

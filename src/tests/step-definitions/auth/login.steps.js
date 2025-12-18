@@ -12,14 +12,12 @@ let testUser;
  */
 Given(/^the user has a registered account$/, async () => {
     testUser = getExistingUser();
-    logger.info(`Using pre-created user: ${testUser.email}`);
 });
 
 /**
  * Navigate to the Login page
  */
 Given(/^is on the Login page$/, async () => {
-    logger.info('User navigates to Login page');
     await loginPage.open();
     const onPage = await loginPage.isOnLoginPage();
     expect(onPage).to.be.true;
@@ -29,7 +27,6 @@ Given(/^is on the Login page$/, async () => {
  * Login using valid credentials
  */
 When(/^the user enters a valid email and password$/, async () => {
-    logger.info('Using pre-created test account');
     testUser = getExistingUser();
     await loginPage.login(testUser.email, testUser.password);
 });

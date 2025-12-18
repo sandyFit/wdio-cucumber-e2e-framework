@@ -1,6 +1,4 @@
-/**
- * Create a new unique user
- */
+
 export function createNewUser() {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 1000);
@@ -20,9 +18,7 @@ export function createNewUser() {
     };
 }
 
-/**
- * Get existing registered user (credentials from the demo testing API website)
- */
+
 export function getExistingUser() {
     return {
         email: 'customer@practicesoftwaretesting.com',
@@ -30,9 +26,7 @@ export function getExistingUser() {
     };
 }
 
-/**
- * Create invalid user data
- */
+
 export function createInvalidUser() {
     return {
         email: 'invalid-email',
@@ -40,9 +34,7 @@ export function createInvalidUser() {
     };
 }
 
-/**
- * Generate random password
- */
+
 export function generateRandomPassword({
     length = 12,
     requireUpper = true,
@@ -81,9 +73,6 @@ export function generateRandomPassword({
 }
 
 
-/**
- * Factory to create a test credentials object
- */
 export function createTestCredentials(user) {
     let currentPassword = user.password;
     let newPassword = '';
@@ -96,10 +85,7 @@ export function createTestCredentials(user) {
             newPassword = pwd;
         },
         getEmail: () => user.email,
-        logCredentials: () => {
-            console.log(`Email: ${user.email}`);
-            console.log(`Password: ${currentPassword}`);
-        }
+
     };
 }
 

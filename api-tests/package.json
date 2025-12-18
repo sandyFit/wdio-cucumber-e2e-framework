@@ -7,7 +7,6 @@
     "test:api": "mocha tests/**/*.test.js",
     "test:api:report": "mocha tests/**/*.test.js --reporter spec --reporter mochawesome --reporter-options reportDir=reports/api-reports,reportFilename=api-test-report,html=true,json=false"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,7 +19,9 @@
     "mocha": "^11.7.5"
   },
   "devDependencies": {
+    "eslint": "^9.39.2",
     "mochawesome": "^7.1.4",
-    "mochawesome-report-generator": "^6.3.2"
+    "mochawesome-report-generator": "^6.3.2",
+    "prettier": "3.7.4"
   }
 }

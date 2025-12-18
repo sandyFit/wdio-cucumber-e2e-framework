@@ -1,7 +1,6 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
 import { HomePage } from '../../../business/pages/home/home.page.js';
 import { ProductDetailsPage } from '../../../business/pages/products/product-details.page.js';
-import { logger } from '../../../core/logger/logger.js';
 import { assertNotEmptyFields } from '../../assertions/assertions.js';
 import 'chai/register-should.js';
 
@@ -13,7 +12,6 @@ Given(/^the user is on the Home page$/, async () => {
 });
 
 When(/^the user clicks on a specific product name or image$/, async () => {
-    // Just click the first visible product
     const products = await homePage.getProducts();
     const firstProduct = products[0];
 
@@ -33,6 +31,4 @@ Then(/^displays all the product's information \(price, description, environmenta
     const info = await productDetailsPage.getProductInfo();
 
     assertNotEmptyFields(info, ['title', 'price', 'description', 'category', 'impact']);
-
-    logger.info('✅ All product information fields are populated');
 });

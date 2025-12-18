@@ -2,16 +2,27 @@
   "name": "task2-wdio",
   "type": "module",
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.5",
     "@wdio/cli": "^9.20.1",
     "@wdio/cucumber-framework": "^9.20.1",
     "@wdio/local-runner": "^9.20.1",
     "@wdio/spec-reporter": "^9.20.0",
     "chai": "^6.2.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-wdio": "^9.16.2",
+    "globals": "^16.5.0",
+    "prettier": "^3.7.4",
     "wdio-chromedriver-service": "^8.1.1",
     "wdio-html-nice-reporter": "^8.1.7"
   },
   "scripts": {
-    "wdio": "wdio run src/config/wdio.conf.js"
+    "wdio": "wdio run src/config/wdio.conf.js",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write \"src/**/*.{js,json}\"",
+    "format:check": "prettier --check \"src/**/*.{js,json}\""
   },
   "dependencies": {
     "pino": "^10.1.0",

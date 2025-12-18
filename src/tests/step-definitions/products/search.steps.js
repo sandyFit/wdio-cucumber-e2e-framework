@@ -16,7 +16,7 @@ When(/^the user enters Claw Hammer in the search bar$/, async () => {
 });
 
 When(/^clicks the Search button$/, async () => {
-    logger.info("searchProduct already clicks the button");
+    logger.info('searchProduct already clicks the button');
 });
 
 Then(/^the search results should display only Claw Hammer products$/, async () => {
@@ -31,10 +31,7 @@ Then(/^the search results should display only Claw Hammer products$/, async () =
 
     assertMinimumElements(products, 1, 'visible products after search');
 
-    logger.info(`Validating ${products.length} visible products contain "claw hammer"`);
-
     let matchedCount = 0;
-    let nonMatchedCount = 0;
     const nonMatches = [];
 
     for (let i = 0; i < products.length; i++) {
@@ -44,21 +41,15 @@ Then(/^the search results should display only Claw Hammer products$/, async () =
             if (title) {
                 if (title.toLowerCase().includes('claw hammer')) {
                     matchedCount++;
-                    logger.info(`✓ Product ${i + 1}: ${title}`);
                 } else {
-                    nonMatchedCount++;
                     nonMatches.push(title);
-                    logger.info(`✗ Product ${i + 1}: ${title} (DOES NOT MATCH)`);
                 }
             }
         } catch (error) {
-            logger.info(`⚠️ Skipped stale element at index ${i}`);
+            logger.info(`⚠️ Skipped stale element at index ${i}`, error);
             continue;
         }
     }
-
-    logger.info(`======================================`);
-    logger.info(`Results: ${matchedCount} matched, ${nonMatchedCount} did not match`);
 
     if (nonMatches.length > 0) {
         logger.info(`Non-matching products found: ${nonMatches.join(', ')}`);

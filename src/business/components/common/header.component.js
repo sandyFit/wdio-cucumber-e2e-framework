@@ -1,5 +1,4 @@
-import { BaseComponent } from "../common/base.component.js";
-import { logger } from "../../../core/logger/logger.js";
+import { BaseComponent } from '../common/base.component.js';
 
 export class HeaderComponent extends BaseComponent {
 
@@ -36,24 +35,20 @@ export class HeaderComponent extends BaseComponent {
 
     // ---- ACTIONS ----
     async waitForLoaded() {
-        logger.info("Waiting for Header to load");
         await this.rootEl.waitForDisplayed({ timeout: 10000 });
     }
 
     async openCart() {
-        logger.info("Opening cart");
         await this.cartLink.waitForClickable();
         await this.cartLink.click();
     }
 
     async getCartCount() {
-        logger.info("Getting cart quantity");
         await this.cartQuantity.waitForDisplayed({ timeout: 5000 });
         return parseInt(await this.cartQuantity.getText(), 10);
     }
 
     async openLanguageMenu() {
-        logger.info("Opening language dropdown");
         await this.languageSelect.waitForClickable();
         await this.languageSelect.click();
     }

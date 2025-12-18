@@ -8,7 +8,7 @@ export class ProductCard extends BaseComponent {
         this._element = rootElement;
         // Debug: log the element selector to see if they're different
         this._elementId = Math.random().toString(36).substr(2, 9);
-        console.log(`ProductCard ${this._elementId} created`);
+
     }
 
     selectors = {
@@ -19,13 +19,11 @@ export class ProductCard extends BaseComponent {
     };
 
     get rootEl() {
-        console.log(`rootEl accessed for card ${this._elementId}`);
         return this._element;
     }
 
     get titleEl() {
         const title = this.rootEl.$(this.selectors.title);
-        console.log(`titleEl for card ${this._elementId}:`, title.selector);
         return title;
     }
 
@@ -34,7 +32,6 @@ export class ProductCard extends BaseComponent {
     }
 
     async getTitleText() {
-        console.log(`getTitleText for card ${this._elementId}`);
         const root = this.rootEl;
         await root.waitForExist({ timeout: 5000 });
 
@@ -42,7 +39,6 @@ export class ProductCard extends BaseComponent {
         await titleElement.waitForExist({ timeout: 5000 });
 
         const text = await titleElement.getText();
-        console.log(`Card ${this._elementId} has title: "${text}"`);
         return text;
     }
 

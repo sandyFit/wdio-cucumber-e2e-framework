@@ -1,13 +1,11 @@
 import { Before, After, BeforeAll, AfterAll } from '@wdio/cucumber-framework';
 import { logger } from '../../core/logger/logger.js';
-import { getExistingUser, createNewUser } from '../../business/data/user-factory.js';
+import { createNewUser } from '../../business/data/user-factory.js';
 import { LoginPage } from '../../business/pages/auth/login.page.js';
 import { SignupPage } from '../../business/pages/auth/signup.page.js';
 
 const loginPage = new LoginPage();
 const signupPage = new SignupPage();
-
-logger.info('🔧 HOOKS: hooks.js loaded');
 
 BeforeAll(async function () {
     logger.info('==============================================');
@@ -40,7 +38,6 @@ Before(async function ({ pickle }) {
         const isProfileTest = name.includes('profile') || name.includes('password');
 
         if (isProfileTest) {
-            logger.info('🆕 Creating new user for profile test');
 
             const newUser = createNewUser();
 
@@ -54,8 +51,6 @@ Before(async function ({ pickle }) {
                     timeoutMsg: 'Expected redirect to login page after registration'
                 }
             );
-
-            logger.info('✔ User registered, now logging in');
 
             await loginPage.open();
             await loginPage.login(newUser.email, newUser.password);
@@ -64,10 +59,6 @@ Before(async function ({ pickle }) {
             this.currentUser = newUser;
 
         } else {
-            // ⭐ CHANGE HERE:
-            // For ALL other scenarios → also create a NEW user, so favorites is always empty.
-            logger.info('🆕 Creating new user for scenario (clean account state)');
-
             const newUser = createNewUser();
 
             await signupPage.open();
@@ -81,12 +72,8 @@ Before(async function ({ pickle }) {
                 }
             );
 
-            logger.info('✔ User registered, now logging in');
-
             await loginPage.open();
             await loginPage.login(newUser.email, newUser.password);
-
-            logger.info('✔ New user registered and logged in');
             this.currentUser = newUser;
         }
     } else {

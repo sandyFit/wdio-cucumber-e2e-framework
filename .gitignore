@@ -17,3 +17,9 @@ wdio-*.log
 
 # WebdriverIO
 .wdio-reports/
+
+# ESLint
+.eslintcache
+
+# Prettier
+.prettierignore
