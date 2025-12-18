@@ -1,9 +1,8 @@
 import { BasePage } from '../basePage.js';
 import { logger } from '../../../core/logger/logger.js';
-import { waitForElementsCount } from '../../../core/browser/wait-helper.js'; 
+import { waitForElementsCount } from '../../../core/browser/wait-helper.js';
 
 export class ProductDetailsPage extends BasePage {
-
     selectors = {
         title: '[data-test="product-name"]',
         price: '[data-test="unit-price"]',
@@ -12,18 +11,34 @@ export class ProductDetailsPage extends BasePage {
         impact: '[data-test="co2-rating-badge"]',
         addToFavoritesButton: '[data-test="add-to-favorites"]',
         productCards: '[data-test^="product-"]',
-        addToCartButton: '[data-test="add-to-cart"]'
+        addToCartButton: '[data-test="add-to-cart"]',
     };
 
     // === ELEMENT GETTERS ===
-    get titleEl() { return $(this.selectors.title); }
-    get priceEl() { return $(this.selectors.price); }
-    get descriptionEl() { return $(this.selectors.description); }
-    get categoryEl() { return $(this.selectors.category); }
-    get impactEl() { return $(this.selectors.impact); }
-    get addToFavoritesButtonEl() { return $(this.selectors.addToFavoritesButton); }
-    get productCards() { return $$(this.selectors.productCards); }
-    get addToCartButtonEl() { return $(this.selectors.addToCartButton); }
+    get titleEl() {
+        return $(this.selectors.title);
+    }
+    get priceEl() {
+        return $(this.selectors.price);
+    }
+    get descriptionEl() {
+        return $(this.selectors.description);
+    }
+    get categoryEl() {
+        return $(this.selectors.category);
+    }
+    get impactEl() {
+        return $(this.selectors.impact);
+    }
+    get addToFavoritesButtonEl() {
+        return $(this.selectors.addToFavoritesButton);
+    }
+    get productCards() {
+        return $$(this.selectors.productCards);
+    }
+    get addToCartButtonEl() {
+        return $(this.selectors.addToCartButton);
+    }
 
     // === LOADING ===
     async waitForLoaded() {
@@ -37,7 +52,7 @@ export class ProductDetailsPage extends BasePage {
             price: await this.getElementText(this.priceEl, 'Product Price'),
             description: await this.getElementText(this.descriptionEl, 'Product Description'),
             category: await this.getElementText(this.categoryEl, 'Product Category'),
-            impact: await this.getElementText(this.impactEl, 'Environmental Impact')
+            impact: await this.getElementText(this.impactEl, 'Environmental Impact'),
         };
     }
 
@@ -68,7 +83,7 @@ export class ProductDetailsPage extends BasePage {
         logger.info('Product added successfully');
     }
 
-    async addToFavorites() {      
+    async addToFavorites() {
         await this.clickElement(this.addToFavoritesButtonEl);
         await this.pause(1500);
         logger.info('Product added to favorites');
@@ -81,8 +96,8 @@ export class ProductDetailsPage extends BasePage {
 
         // Check if product was already in favorites
         const bodyText = await this.getElementText($('body'), 'Page body');
-        const alreadyInFavorites = bodyText.toLowerCase().includes('already') ||
-            bodyText.toLowerCase().includes('existe');
+        const alreadyInFavorites =
+            bodyText.toLowerCase().includes('already') || bodyText.toLowerCase().includes('existe');
 
         if (alreadyInFavorites) {
             logger.info('ℹ️ Product is already in favorites list');
@@ -92,7 +107,6 @@ export class ProductDetailsPage extends BasePage {
             return true;
         }
     }
-
 
     async isOnProductDetailsPage() {
         const url = await this.getCurrentUrl();

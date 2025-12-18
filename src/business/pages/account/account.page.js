@@ -12,12 +12,10 @@ export class AccountPage extends BasePage {
         await this.waitForPageLoad();
     }
 
-
     async isOnAccountPage() {
         const url = await this.getCurrentUrl();
         return url.includes('/account');
     }
-
 
     async isOnProfileSection() {
         const url = await this.getCurrentUrl();

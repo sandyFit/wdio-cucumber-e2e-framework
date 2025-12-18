@@ -5,4 +5,3 @@ const stream = pretty({ colorize: true });
 const logger = pino({ level: 'info' }, stream);
 
 export { logger };
-

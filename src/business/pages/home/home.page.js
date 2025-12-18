@@ -3,13 +3,12 @@ import { logger } from '../../../core/logger/logger.js';
 import { waitForElementsCount } from '../../../core/browser/wait-helper.js';
 
 export class HomePage extends BasePage {
-
     selectors = {
         filtersButton: '[data-test="filters"]',
         searchInput: '[data-test="search-query"]',
         searchButton: '[data-test="search-submit"]',
         productCards: '[data-test^="product-"]',
-        productName: '[data-test="product-name"]'
+        productName: '[data-test="product-name"]',
     };
 
     // === GETTERS ===
@@ -78,7 +77,6 @@ export class HomePage extends BasePage {
         if (products.length > 0) {
             try {
                 await products[0].waitForDisplayed({ timeout: 5000 });
-
             } catch (error) {
                 logger.error('⚠️ First product visibility check failed, but continuing', error);
             }
@@ -103,7 +101,7 @@ export class HomePage extends BasePage {
             if (name && name.trim()) {
                 return name.trim();
             }
-        } catch  {
+        } catch {
             // Silent fail, try next method
         }
 

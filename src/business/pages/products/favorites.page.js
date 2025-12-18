@@ -2,10 +2,9 @@ import { AccountPage } from '../account/account.page.js';
 import { logger } from '../../../core/logger/logger.js';
 
 export class FavoritesPage extends AccountPage {
-
     selectors = {
         favoriteProductCard: '[data-test^="favorite-"]',
-        removeFavoriteButton: '[data-test="delete"]'
+        removeFavoriteButton: '[data-test="delete"]',
     };
 
     // === GETTERS ===
@@ -16,7 +15,6 @@ export class FavoritesPage extends AccountPage {
     get removeFavoriteButtons() {
         return $$(this.selectors.removeFavoriteButton);
     }
-
 
     // === DATA GETTERS ===
     async getFavoriteProducts() {
@@ -37,17 +35,14 @@ export class FavoritesPage extends AccountPage {
         await browser.waitUntil(
             async () => {
                 const products = await this.favoriteProductCards;
-                return products.length > 0 && await this.isElementDisplayed(products[0]);
+                return products.length > 0 && (await this.isElementDisplayed(products[0]));
             },
             {
                 timeout: 10000,
-                timeoutMsg: 'Favorites page did not load favorite products in time'
+                timeoutMsg: 'Favorites page did not load favorite products in time',
             }
         );
-
     }
-
-
 
     // === NAVIGATION ===
     async open() {
@@ -60,6 +55,4 @@ export class FavoritesPage extends AccountPage {
     async isOnFavoritesPage() {
         return await super.isOnFavoritesSection();
     }
-
-    
 }

@@ -14,7 +14,6 @@ Given(/^the user is on the Sign Up page$/, async () => {
     await signupPage.open();
 });
 
-
 When(/^the user enters a valid info in all required inputs$/, async () => {
     testUser = createNewUser();
     await signupPage.registerUser(testUser);
@@ -24,7 +23,6 @@ When(/^clicks the Register button$/, async () => {
     logger.info('Register button already clicked inside registerUser()');
 });
 
-
 Then(/^the system should create a new account$/, async () => {
     await loginPage.verifyOnLoginPage();
 });
@@ -33,4 +31,3 @@ Then(/^redirect to the Login page$/, async () => {
     const url = await loginPage.getCurrentUrl();
     expect(url).to.include('/auth/login', 'Should redirect to login page after registration');
 });
-

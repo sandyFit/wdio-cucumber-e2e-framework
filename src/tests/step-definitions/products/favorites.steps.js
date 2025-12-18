@@ -20,14 +20,12 @@ When('the user clicks the Add to Favourites button', async () => {
     await productDetailsPage.addToFavoritesAndCheck();
 });
 
-
-Then('the product should be added to the user\'s favorites list', async () => {
+Then("the product should be added to the user's favorites list", async () => {
     await favoritesPage.open();
 
     const items = await favoritesPage.favoriteProductCards;
 
     assertMinimumElements(items, 1, 'favorite products');
-
 });
 
 Then('the product should appear in the favorites page', async () => {

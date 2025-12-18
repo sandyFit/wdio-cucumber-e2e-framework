@@ -23,13 +23,11 @@ Before(async function ({ pickle }) {
     const requiresLogin =
         !name.includes('sign up') &&
         !name.includes('signup') &&
-        (
-            name.includes('profile') ||
+        (name.includes('profile') ||
             name.includes('password') ||
             name.includes('favorite') ||
             name.includes('favourite') ||
-            name.includes('account')
-        );
+            name.includes('account'));
 
     if (requiresLogin) {
         logger.info('🔐 Scenario requires authenticated user');
@@ -38,39 +36,31 @@ Before(async function ({ pickle }) {
         const isProfileTest = name.includes('profile') || name.includes('password');
 
         if (isProfileTest) {
-
             const newUser = createNewUser();
 
             await signupPage.open();
             await signupPage.registerUser(newUser);
 
-            await browser.waitUntil(
-                async () => (await browser.getUrl()).includes('/auth/login'),
-                {
-                    timeout: 10000,
-                    timeoutMsg: 'Expected redirect to login page after registration'
-                }
-            );
+            await browser.waitUntil(async () => (await browser.getUrl()).includes('/auth/login'), {
+                timeout: 10000,
+                timeoutMsg: 'Expected redirect to login page after registration',
+            });
 
             await loginPage.open();
             await loginPage.login(newUser.email, newUser.password);
 
             logger.info('✔ New user registered and logged in');
             this.currentUser = newUser;
-
         } else {
             const newUser = createNewUser();
 
             await signupPage.open();
             await signupPage.registerUser(newUser);
 
-            await browser.waitUntil(
-                async () => (await browser.getUrl()).includes('/auth/login'),
-                {
-                    timeout: 10000,
-                    timeoutMsg: 'Expected redirect to login page after registration'
-                }
-            );
+            await browser.waitUntil(async () => (await browser.getUrl()).includes('/auth/login'), {
+                timeout: 10000,
+                timeoutMsg: 'Expected redirect to login page after registration',
+            });
 
             await loginPage.open();
             await loginPage.login(newUser.email, newUser.password);

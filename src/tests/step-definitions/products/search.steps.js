@@ -5,7 +5,6 @@ import { assertMinimumElements, assertElementCount } from '../../assertions/asse
 
 const homePage = new HomePage();
 
-
 Given(/^the user navigates to the Home page$/, async () => {
     await homePage.open();
 });

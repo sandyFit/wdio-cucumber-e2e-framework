@@ -20,7 +20,7 @@ export const config = {
         path.resolve('./src/tests/features/**/cart-operations.feature'),
         path.resolve('./src/tests/features/**/favorites.feature'),
         path.resolve('./src/tests/features/**/search.feature'),
-        path.resolve('./src/tests/features/**/language.feature')
+        path.resolve('./src/tests/features/**/language.feature'),
     ],
 
     exclude: [],
@@ -31,19 +31,18 @@ export const config = {
     // ====================
     maxInstances: 2, // parallel sessions
     maxInstancesPerCapability: 2,
-    
+
     capabilities: [
         {
             maxInstances: 2,
             browserName: 'chrome',
-            'goog:chromeOptions': { args: ['--headless', '--disable-gpu'] }
-
+            'goog:chromeOptions': { args: ['--headless', '--disable-gpu'] },
         },
         {
             maxInstances: 2,
             browserName: 'firefox',
-            'moz:firefoxOptions': { args: ['-headless'] }
-        }
+            'moz:firefoxOptions': { args: ['-headless'] },
+        },
     ],
 
     //
@@ -57,25 +56,25 @@ export const config = {
     connectionRetryCount: 3,
     framework: 'cucumber',
     // retry tests 2 times before failing
-    specFileRetries: 2, 
+    specFileRetries: 2,
     reporters: [
         'spec', // ✅ Shows results in console
-        ['html-nice', {
-            outputDir: './reports/ui-reports/',
-            filename: 'ui-test-report.html',
-            reportTitle: 'UI Test Execution Report',
-            linkScreenshots: true,
-            showInBrowser: false,
-            collapseTests: false,
-            useOnAfterCommandForScreenshot: false
-        }]
+        [
+            'html-nice',
+            {
+                outputDir: './reports/ui-reports/',
+                filename: 'ui-test-report.html',
+                reportTitle: 'UI Test Execution Report',
+                linkScreenshots: true,
+                showInBrowser: false,
+                collapseTests: false,
+                useOnAfterCommandForScreenshot: false,
+            },
+        ],
     ],
 
     cucumberOpts: {
-        require: [
-            path.resolve('./src/tests/step-definitions/**/*.js'),
-            path.resolve('./src/tests/assertions/**/*.js')
-        ],
+        require: [path.resolve('./src/tests/step-definitions/**/*.js'), path.resolve('./src/tests/assertions/**/*.js')],
         backtrace: false,
         dryRun: false,
         failFast: false,
@@ -207,7 +206,7 @@ export const config = {
      */
     // afterFeature: function (uri, feature) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name
@@ -245,22 +244,22 @@ export const config = {
     // onComplete: function(exitCode, config, capabilities, results) {
     // },
     /**
-    * Gets executed when a refresh happens.
-    * @param {string} oldSessionId session ID of the old session
-    * @param {string} newSessionId session ID of the new session
-    */
+     * Gets executed when a refresh happens.
+     * @param {string} oldSessionId session ID of the old session
+     * @param {string} newSessionId session ID of the new session
+     */
     // onReload: function(oldSessionId, newSessionId) {
     // }
     /**
-    * Hook that gets executed before a WebdriverIO assertion happens.
-    * @param {object} params information about the assertion to be executed
-    */
+     * Hook that gets executed before a WebdriverIO assertion happens.
+     * @param {object} params information about the assertion to be executed
+     */
     // beforeAssertion: function(params) {
     // }
     /**
-    * Hook that gets executed after a WebdriverIO assertion happened.
-    * @param {object} params information about the assertion that was executed, including its results
-    */
+     * Hook that gets executed after a WebdriverIO assertion happened.
+     * @param {object} params information about the assertion that was executed, including its results
+     */
     // afterAssertion: function(params) {
     // }
 };

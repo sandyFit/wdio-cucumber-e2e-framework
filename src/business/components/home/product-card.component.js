@@ -1,21 +1,19 @@
 import { BaseComponent } from '../common/base.component.js';
 
 export class ProductCard extends BaseComponent {
-
     constructor(rootElement) {
         super(rootElement);
         // Store the element reference directly
         this._element = rootElement;
         // Debug: log the element selector to see if they're different
         this._elementId = Math.random().toString(36).substr(2, 9);
-
     }
 
     selectors = {
         title: '[data-test="product-name"]',
         image: '[data-test="product-image"]',
         price: '[data-test="product-price"]',
-        rating: '[data-test="co2-rating-badge"]'
+        rating: '[data-test="co2-rating-badge"]',
     };
 
     get rootEl() {

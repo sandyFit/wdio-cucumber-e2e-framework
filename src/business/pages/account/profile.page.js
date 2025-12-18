@@ -1,21 +1,30 @@
 import { AccountPage } from './account.page.js';
 
 export class ProfilePage extends AccountPage {
-
     selectors = {
         currentPassword: '[data-test="current-password"]',
         newPassword: '[data-test="new-password"]',
         confirmPassword: '[data-test="new-password-confirm"]',
         changePasswordBtn: '[data-test="change-password-submit"]',
-        errorAlert: '[data-test="alert-error"]'
+        errorAlert: '[data-test="alert-error"]',
     };
 
     // ================= Getters =================
-    get currentPasswordInput() { return $(this.selectors.currentPassword); }
-    get newPasswordInput() { return $(this.selectors.newPassword); }
-    get confirmPasswordInput() { return $(this.selectors.confirmPassword); }
-    get changePasswordButton() { return $(this.selectors.changePasswordBtn); }
-    get errorAlert() { return $(this.selectors.errorAlert); }
+    get currentPasswordInput() {
+        return $(this.selectors.currentPassword);
+    }
+    get newPasswordInput() {
+        return $(this.selectors.newPassword);
+    }
+    get confirmPasswordInput() {
+        return $(this.selectors.confirmPassword);
+    }
+    get changePasswordButton() {
+        return $(this.selectors.changePasswordBtn);
+    }
+    get errorAlert() {
+        return $(this.selectors.errorAlert);
+    }
 
     // ================= Methods =================
     async open() {
@@ -25,13 +34,12 @@ export class ProfilePage extends AccountPage {
         await this.waitForProfileElements();
     }
 
-
     async waitForProfileElements() {
         const elements = [
             this.currentPasswordInput,
             this.newPasswordInput,
             this.confirmPasswordInput,
-            this.changePasswordButton
+            this.changePasswordButton,
         ];
         for (const el of elements) {
             await el.waitForDisplayed({ timeout: 15000 });
@@ -48,7 +56,6 @@ export class ProfilePage extends AccountPage {
         await this.clearAndFillInput(this.confirmPasswordInput, newPassword);
     }
 
-
     async submitPasswordChange() {
         const btn = await this.changePasswordButton;
         await btn.waitForDisplayed({ timeout: 15000 });
@@ -58,7 +65,6 @@ export class ProfilePage extends AccountPage {
 
         await this.pause(500);
     }
-
 
     async verifyNoError() {
         if (await this.isElementDisplayed(this.errorAlert)) {
@@ -73,7 +79,5 @@ export class ProfilePage extends AccountPage {
         if (!finalUrl.includes('/auth/login')) {
             throw new Error('User was NOT redirected to login after password change');
         }
-
     }
-
 }

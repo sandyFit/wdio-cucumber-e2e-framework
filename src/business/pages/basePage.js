@@ -72,11 +72,15 @@ export class BasePage {
     }
 
     async setInputValueDirectly(element, value) {
-        await browser.execute((el, val) => {
-            el.value = val;
-            el.dispatchEvent(new Event('input', { bubbles: true }));
-            el.dispatchEvent(new Event('change', { bubbles: true }));
-        }, element, value);
+        await browser.execute(
+            (el, val) => {
+                el.value = val;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            },
+            element,
+            value
+        );
     }
 
     // ========================================
@@ -124,13 +128,10 @@ export class BasePage {
     async waitForPageLoad(timeout) {
         timeout = timeout || getDefaultTimeout();
 
-        await browser.waitUntil(
-            async () => (await browser.execute(() => document.readyState)) === 'complete',
-            {
-                timeout,
-                timeoutMsg: `Page did not reach 'complete' readyState within ${timeout}ms`
-            }
-        );
+        await browser.waitUntil(async () => (await browser.execute(() => document.readyState)) === 'complete', {
+            timeout,
+            timeoutMsg: `Page did not reach 'complete' readyState within ${timeout}ms`,
+        });
     }
 
     async waitForAngular() {

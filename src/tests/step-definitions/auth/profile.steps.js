@@ -25,7 +25,6 @@ When(/^clicks the Change Password button$/, async () => {
     await profilePage.submitPasswordChange();
 });
 
-
 Then(/^the new password should be saved successfully$/, async () => {
     await profilePage.verifyNoError();
     await profilePage.waitForRedirectToLogin();
