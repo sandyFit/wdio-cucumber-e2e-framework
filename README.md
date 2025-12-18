@@ -182,6 +182,31 @@ These are the key packages used in this project:
 
 ---
 
+Got it! Here's a concise way to document ESLint in your README:
+
+---
+
+## **Linting**
+
+This project uses **ESLint** and **Prettier** for code quality.
+
+Check for issues:
+
+```bash
+npm run lint
+```
+
+Auto-fix issues:
+
+```bash
+npm run lint:fix
+```
+
+---
+
+It’s short, clear, and fits naturally into your README.
+
+
 ## License
 
 This project is part of the EPAM Testing Automation training program.
