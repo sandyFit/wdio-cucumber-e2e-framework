@@ -186,21 +186,49 @@ Got it! Here's a concise way to document ESLint in your README:
 
 ---
 
-## **Linting**
+Here’s a clean, concise way to add **Prettier** to that section, keeping it consistent and professional 👌
+(also matches the kind of README reviewers expect)
 
-This project uses **ESLint** and **Prettier** for code quality.
+---
 
-Check for issues:
+## **Linting & Formatting**
+
+This project uses **ESLint** and **Prettier** to ensure code quality and consistent formatting.
+
+### Check for linting issues
 
 ```bash
 npm run lint
 ```
 
-Auto-fix issues:
+### Auto-fix linting issues
 
 ```bash
 npm run lint:fix
 ```
+
+### Format code with Prettier
+
+```bash
+npm run format
+```
+
+### Check formatting without modifying files
+
+```bash
+npm run format:check
+```
+
+---
+
+### 💡 Tip
+
+Run formatting **before committing** to avoid unnecessary diffs:
+
+```bash
+npm run format && npm run lint
+```
+
 
 ---
 

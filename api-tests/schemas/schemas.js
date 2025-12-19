@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 /**
  * Schema for booking dates object
@@ -17,7 +17,7 @@ const bookingSchema = Joi.object({
   totalprice: Joi.number().integer().positive().required(),
   depositpaid: Joi.boolean().required(),
   bookingdates: bookingDatesSchema.required(),
-  additionalneeds: Joi.string().allow('', null).optional(),
+  additionalneeds: Joi.string().allow("", null).optional(),
 });
 
 /**

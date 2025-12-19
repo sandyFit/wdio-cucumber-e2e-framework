@@ -1,19 +1,19 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const config = {
-  baseURL: process.env.BASE_URL || 'https://restful-booker.herokuapp.com',
+  baseURL: process.env.BASE_URL || "https://restful-booker.herokuapp.com",
 
   auth: {
-    username: process.env.AUTH_USERNAME || 'admin',
-    password: process.env.AUTH_PASSWORD || 'password123',
+    username: process.env.AUTH_USERNAME || "admin",
+    password: process.env.AUTH_PASSWORD || "password123",
   },
 
   // API Endpoints
   endpoints: {
-    auth: '/auth',
-    booking: '/booking',
+    auth: "/auth",
+    booking: "/booking",
     bookingById: (id) => `/booking/${id}`,
-    ping: '/ping',
+    ping: "/ping",
   },
 
   // Test configuration
