@@ -29,19 +29,17 @@ export class BasePage {
     // ELEMENT INTERACTIONS
     // ========================================
 
-    async clickElement(element, name = 'element') {
-        logger.info(`Click → ${name}`);
+    async clickElement(element) {
         await waitHelper.waitForElementClickable(element);
         await element.click();
     }
 
-    async scrollToElement(element, name = 'element', options = {}) {
-        logger.info(`Scrolling into view: ${name}`);
+    async scrollToElement(element, options = {}) {
         try {
             await element.scrollIntoView(options);
         } catch (error) {
-            logger.warn(`Failed to scroll to ${name}, retrying...`);
-            await this.pause(500, 'waiting before scroll retry');
+            logger.info('Failed to scroll', error);
+            await this.pause(500);
             await element.scrollIntoView(options);
         }
     }
@@ -50,40 +48,39 @@ export class BasePage {
     // FORM INPUTS
     // ========================================
 
-    async fillInput(element, value, name = 'input') {
-        logger.info(`Typing into ${name}: ${value}`);
+    async fillInput(element, value) {
         await waitHelper.waitForElementVisible(element);
         await element.setValue(value);
     }
 
-    async clearAndFillInput(element, value, name = 'input') {
-        logger.info(`Clearing & typing into ${name}: ${value}`);
-
+    async clearAndFillInput(element, value) {
         await element.waitForDisplayed({ timeout: 5000 });
         await element.waitForEnabled({ timeout: 5000 });
-        await this.pause(100, 'allowing element to be ready for input');
+        await this.pause(100);
 
         await element.clearValue();
         await element.setValue(value);
     }
 
-    async fillField(element, value, name = '') {
+    async fillField(element, value) {
         const tag = await element.getTagName();
         if (tag === 'select') {
             await element.selectByVisibleText(value);
-            logger.info(`Selecting ${name}: ${value}`);
         } else {
-            await this.clearAndFillInput(element, value, name);
+            await this.clearAndFillInput(element, value);
         }
     }
 
-    async setInputValueDirectly(element, value, name = 'input') {
-        logger.info(`Typing into ${name} directly via JS: ${value}`);
-        await browser.execute((el, val) => {
-            el.value = val;
-            el.dispatchEvent(new Event('input', { bubbles: true }));
-            el.dispatchEvent(new Event('change', { bubbles: true }));
-        }, element, value);
+    async setInputValueDirectly(element, value) {
+        await browser.execute(
+            (el, val) => {
+                el.value = val;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            },
+            element,
+            value
+        );
     }
 
     // ========================================
@@ -111,18 +108,16 @@ export class BasePage {
     // TEXT OPERATIONS
     // ========================================
 
-    async getElementText(element, name = 'element') {
+    async getElementText(element) {
         await element.scrollIntoView();
         await waitHelper.waitForElementVisible(element, 5000);
         const text = await element.getText();
-        logger.info(`Text retrieved from ${name}: "${text}"`);
         return text;
     }
 
-    async waitAndGetText(element, name = 'element', timeout = getDefaultTimeout()) {
+    async waitAndGetText(element, timeout = getDefaultTimeout()) {
         await waitHelper.waitForElementVisible(element, timeout);
         const text = await element.getText();
-        logger.info(`Wait + Text from ${name}: "${text}"`);
         return text;
     }
 
@@ -133,19 +128,13 @@ export class BasePage {
     async waitForPageLoad(timeout) {
         timeout = timeout || getDefaultTimeout();
 
-        logger.info('Waiting for page load...');
-        await browser.waitUntil(
-            async () => (await browser.execute(() => document.readyState)) === 'complete',
-            {
-                timeout,
-                timeoutMsg: `Page did not reach 'complete' readyState within ${timeout}ms`
-            }
-        );
-        logger.info('Page fully loaded');
+        await browser.waitUntil(async () => (await browser.execute(() => document.readyState)) === 'complete', {
+            timeout,
+            timeoutMsg: `Page did not reach 'complete' readyState within ${timeout}ms`,
+        });
     }
 
     async waitForAngular() {
-        logger.info('Waiting for Angular to stabilize');
         await browser.execute(() => {
             return new Promise((resolve) => {
                 if (window.getAllAngularTestabilities) {
@@ -168,16 +157,14 @@ export class BasePage {
                 }
             });
         });
-        await this.pause(500, 'allowing Angular to stabilize');
-        logger.info('✅ Angular stabilized');
+        await this.pause(500);
     }
 
     // ========================================
     // UTILITIES
     // ========================================
 
-    async pause(ms, reason = '') {
-        if (reason) logger.info(`Pausing ${ms}ms: ${reason}`);
+    async pause(ms) {
         await browser.pause(ms);
     }
 

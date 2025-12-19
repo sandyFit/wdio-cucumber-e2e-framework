@@ -22,9 +22,7 @@ Then(/^all interface text should appear in Spanish$/, async () => {
     await header.waitForSpanish();
 });
 
-
 Then(/^product names should remain in their original language$/, async () => {
-    logger.info('Waiting for product names to reappear after language switch');
     await waitForElementsCount(() => $$('[data-test="product-name"]'), 1, 8000);
 
     const nameElements = await $$('[data-test="product-name"]');
@@ -33,22 +31,16 @@ Then(/^product names should remain in their original language$/, async () => {
 
     logger.info(`Found ${nameElements.length} product names`);
 
-    const forbiddenSpanishWords = [
-        "martillo", "alicates", "destornillador", "tenazas"
-    ];
-
-    logger.info('Verifying product names are not translated to Spanish');
+    const forbiddenSpanishWords = ['martillo', 'alicates', 'destornillador', 'tenazas'];
 
     for (const nameEl of nameElements) {
         const name = (await nameEl.getText()).toLowerCase();
 
-        forbiddenSpanishWords.forEach(word => {
+        forbiddenSpanishWords.forEach((word) => {
             name.should.not.contain(word);
         });
     }
 
     logger.info('✅ All product names remained in their original language');
 });
-
-
 
