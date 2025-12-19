@@ -180,14 +180,6 @@ These are the key packages used in this project:
 - `@wdio/firefox-profile-service` – Manages Firefox profiles for test execution.
 - `chai` – Assertion library for validating test results.
 
----
-
-Got it! Here's a concise way to document ESLint in your README:
-
----
-
-Here’s a clean, concise way to add **Prettier** to that section, keeping it consistent and professional 👌
-(also matches the kind of README reviewers expect)
 
 ---
 
@@ -229,10 +221,7 @@ Run formatting **before committing** to avoid unnecessary diffs:
 npm run format && npm run lint
 ```
 
-
 ---
-
-It’s short, clear, and fits naturally into your README.
 
 
 ## License
