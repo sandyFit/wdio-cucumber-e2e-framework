@@ -52,4 +52,3 @@ export const logger = {
         baseLogger.fatal(maskSensitiveData(message), ...args);
     }
 };
-
