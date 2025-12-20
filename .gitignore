@@ -1,2 +1,3 @@
 node_modules
-
+api-tests/node_modules/
+api-tests/.env
