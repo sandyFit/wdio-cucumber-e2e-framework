@@ -166,10 +166,6 @@ This means **2 sessions across both Chrome and Firefox** can run simultaneously,
 
 ## **Dependencies**
 
-Key packages used:
-
-## Dependencies
-
 These are the key packages used in this project:
 
 - `@wdio/cli` – WebdriverIO command line interface for running tests.
@@ -179,6 +175,50 @@ These are the key packages used in this project:
 - `@wdio/chromedriver-service` – Manages ChromeDriver for running tests in Chrome.
 - `@wdio/firefox-profile-service` – Manages Firefox profiles for test execution.
 - `chai` – Assertion library for validating test results.
+
+
+---
+
+## Reports (Module 9)
+
+### Spec Report
+
+Test execution results are displayed in the console using the spec reporter.
+
+### Allure Report
+
+After running the tests, you can generate and open the Allure HTML report using the following command:
+
+```bash
+npm run report
+```
+
+This command will:
+
+* Generate the Allure HTML report from the raw results
+* Open the report automatically in your browser
+
+> Note: The generated report files are created locally and are excluded from version control.
+
+
+### API Test Reports (Mochawesome)
+
+API tests use **Mocha + Chai** with the **Mochawesome** HTML reporter.
+
+To generate the API HTML report:
+
+```bash
+cd api-tests
+npm run test:api:report
+```
+
+The report will be generated at:
+
+```text
+api-tests/reports/api-reports/api-test-report.html
+```
+
+> API report files are generated locally and excluded from Git.
 
 
 ---

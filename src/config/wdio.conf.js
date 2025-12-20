@@ -1,8 +1,14 @@
 import path from "path";
+import * as hooks from "./allure-hooks.js";
 
 export const config = {
   baseUrl: "https://practicesoftwaretesting.com",
   //
+  // ====================
+  // Allure Hooks
+  // ====================
+  afterScenario: hooks.afterScenario,
+  onComplete: hooks.onComplete,
   // ====================
   // Runner Configuration
   // ====================
@@ -58,17 +64,16 @@ export const config = {
   // retry tests 2 times before failing
   specFileRetries: 2,
   reporters: [
-    "spec", // ✅ Shows results in console
+    "spec", // Console output
+
+    // Allure Reporter
     [
-      "html-nice",
+      "allure",
       {
-        outputDir: "./reports/ui-reports/",
-        filename: "ui-test-report.html",
-        reportTitle: "UI Test Execution Report",
-        linkScreenshots: true,
-        showInBrowser: false,
-        collapseTests: false,
-        useOnAfterCommandForScreenshot: false,
+        outputDir: "./reports/allure-results/",
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+        useCucumberStepReporter: true,
       },
     ],
   ],

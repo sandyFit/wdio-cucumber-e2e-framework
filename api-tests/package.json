@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
     "mochawesome": "^7.1.4",
     "mochawesome-report-generator": "^6.3.2",
     "prettier": "3.7.4"
