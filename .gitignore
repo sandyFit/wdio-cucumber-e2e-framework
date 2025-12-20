@@ -1,19 +1,19 @@
-node_modules
-api-tests/node_modules
+# Node
+node_modules/
+api-tests/node_modules/
 api-tests/.env
 
-# Test Reports
+# Allure
+reports/**/allure-results/
+allure-report/
+
+# WDIO reports
 reports/
-ui-reports/
-mochawesome-report/
+reports/api-reports/
 
 # Screenshots
 screenshots/
 errorShots/
 
-# Report Files
-*.json
+# Logs
 wdio-*.log
-
-# WebdriverIO
-.wdio-reports/
