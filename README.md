@@ -201,7 +201,27 @@ This command will:
 
 > Note: The generated report files are created locally and are excluded from version control.
 
+### API Test Reports (Mochawesome)
 
+API tests use **Mocha + Chai** with the **Mochawesome** HTML reporter.
+
+To generate the API HTML report:
+
+```bash
+cd api-tests
+npm run test:api:report
+```
+
+The report will be generated at:
+
+```text
+api-tests/reports/api-reports/api-test-report.html
+```
+
+> API report files are generated locally and excluded from Git.
+
+
+---
 
 ## License
 
