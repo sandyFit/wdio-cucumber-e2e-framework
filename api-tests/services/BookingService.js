@@ -1,5 +1,5 @@
-const axios = require("axios");
-const config = require("../config/config");
+const axios = require('axios');
+const config = require('../config/config');
 
 class BookingService {
   constructor() {
@@ -7,9 +7,9 @@ class BookingService {
       baseURL: config.baseURL,
       timeout: config.timeout,
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
     });
 
     // Track request start time for response time assertions
@@ -21,8 +21,7 @@ class BookingService {
     // Calculate response time
     this.client.interceptors.response.use((response) => {
       response.config.metadata.endTime = Date.now();
-      response.duration =
-        response.config.metadata.endTime - response.config.metadata.startTime;
+      response.duration = response.config.metadata.endTime - response.config.metadata.startTime;
       return response;
     });
   }
@@ -35,7 +34,7 @@ class BookingService {
     try {
       const response = await this.client.post(config.endpoints.auth, {
         username: config.auth.username,
-        password: config.auth.password,
+        password: config.auth.password
       });
       return response;
     } catch (error) {
@@ -51,7 +50,7 @@ class BookingService {
   async getAllBookingIds(filters = {}) {
     try {
       const response = await this.client.get(config.endpoints.booking, {
-        params: filters,
+        params: filters
       });
       return response;
     } catch (error) {
@@ -66,10 +65,7 @@ class BookingService {
    */
   async createBooking(bookingData) {
     try {
-      const response = await this.client.post(
-        config.endpoints.booking,
-        bookingData,
-      );
+      const response = await this.client.post(config.endpoints.booking, bookingData);
       return response;
     } catch (error) {
       throw this._handleError(error);
@@ -99,16 +95,12 @@ class BookingService {
    */
   async updateBooking(id, bookingData, token) {
     try {
-      const response = await this.client.put(
-        config.endpoints.bookingById(id),
-        bookingData,
-        {
-          headers: {
-            Cookie: `token=${token}`,
-            Authorization: `Basic ${this._encodeCredentials()}`,
-          },
-        },
-      );
+      const response = await this.client.put(config.endpoints.bookingById(id), bookingData, {
+        headers: {
+          Cookie: `token=${token}`,
+          Authorization: `Basic ${this._encodeCredentials()}`
+        }
+      });
       return response;
     } catch (error) {
       throw this._handleError(error);
@@ -124,16 +116,12 @@ class BookingService {
    */
   async partialUpdateBooking(id, partialData, token) {
     try {
-      const response = await this.client.patch(
-        config.endpoints.bookingById(id),
-        partialData,
-        {
-          headers: {
-            Cookie: `token=${token}`,
-            Authorization: `Basic ${this._encodeCredentials()}`,
-          },
-        },
-      );
+      const response = await this.client.patch(config.endpoints.bookingById(id), partialData, {
+        headers: {
+          Cookie: `token=${token}`,
+          Authorization: `Basic ${this._encodeCredentials()}`
+        }
+      });
       return response;
     } catch (error) {
       throw this._handleError(error);
@@ -148,15 +136,12 @@ class BookingService {
    */
   async deleteBooking(id, token) {
     try {
-      const response = await this.client.delete(
-        config.endpoints.bookingById(id),
-        {
-          headers: {
-            Cookie: `token=${token}`,
-            Authorization: `Basic ${this._encodeCredentials()}`,
-          },
-        },
-      );
+      const response = await this.client.delete(config.endpoints.bookingById(id), {
+        headers: {
+          Cookie: `token=${token}`,
+          Authorization: `Basic ${this._encodeCredentials()}`
+        }
+      });
       return response;
     } catch (error) {
       throw this._handleError(error);
@@ -172,7 +157,7 @@ class BookingService {
    */
   _encodeCredentials() {
     const credentials = `${config.auth.username}:${config.auth.password}`;
-    return Buffer.from(credentials).toString("base64");
+    return Buffer.from(credentials).toString('base64');
   }
 
   /**
@@ -184,9 +169,7 @@ class BookingService {
   _handleError(error) {
     if (error.response) {
       // Server responded with error status
-      const err = new Error(
-        `API Error: ${error.response.status} - ${error.response.statusText}`,
-      );
+      const err = new Error(`API Error: ${error.response.status} - ${error.response.statusText}`);
       err.status = error.response.status;
       err.data = error.response.data;
       err.headers = error.response.headers;
@@ -194,7 +177,7 @@ class BookingService {
       return err;
     } else if (error.request) {
       // Request made but no response
-      return new Error("No response from server");
+      return new Error('No response from server');
     } else {
       // Error in request setup
       return error;

@@ -1,11 +1,11 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 /**
  * Schema for booking dates object
  */
 const bookingDatesSchema = Joi.object({
   checkin: Joi.string().required(),
-  checkout: Joi.string().required(),
+  checkout: Joi.string().required()
 });
 
 /**
@@ -17,7 +17,7 @@ const bookingSchema = Joi.object({
   totalprice: Joi.number().integer().positive().required(),
   depositpaid: Joi.boolean().required(),
   bookingdates: bookingDatesSchema.required(),
-  additionalneeds: Joi.string().allow("", null).optional(),
+  additionalneeds: Joi.string().allow('', null).optional()
 });
 
 /**
@@ -25,14 +25,14 @@ const bookingSchema = Joi.object({
  */
 const createBookingResponseSchema = Joi.object({
   bookingid: Joi.number().integer().positive().required(),
-  booking: bookingSchema.required(),
+  booking: bookingSchema.required()
 });
 
 /**
  * Schema for single booking ID object
  */
 const bookingIdSchema = Joi.object({
-  bookingid: Joi.number().integer().positive().required(),
+  bookingid: Joi.number().integer().positive().required()
 });
 
 /**
@@ -44,7 +44,7 @@ const bookingIdsArraySchema = Joi.array().items(bookingIdSchema).min(0);
  * Schema for authentication token response
  */
 const authTokenSchema = Joi.object({
-  token: Joi.string().required(),
+  token: Joi.string().required()
 });
 
 /**
@@ -59,5 +59,5 @@ module.exports = {
   bookingIdSchema,
   bookingIdsArraySchema,
   authTokenSchema,
-  updateBookingResponseSchema,
+  updateBookingResponseSchema
 };

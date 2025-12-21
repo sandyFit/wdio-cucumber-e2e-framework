@@ -6,8 +6,8 @@
   "scripts": {
     "test:api": "mocha tests/**/*.test.js",
     "test:api:report": "mocha tests/**/*.test.js --reporter spec --reporter mochawesome --reporter-options reportDir=reports/api-reports,reportFilename=api-test-report,html=true,json=false",
-    "lint": "eslint tests/**/*.js services/**/*.js schemas/**/*.js",
-    "lint:fix": "eslint tests/**/*.js services/**/*.js schemas/**/*.js --fix",
+    "lint": "eslint -c eslint.config.js \"tests/**/*.js\" \"services/**/*.js\" \"schemas/**/*.js\"",
+    "lint:fix": "eslint -c eslint.config.js \"tests/**/*.js\" \"services/**/*.js\" \"schemas/**/*.js\" --fix",
     "format": "prettier --write \"**/*.{js,json}\"",
     "format:check": "prettier --check \"**/*.{js,json}\""
   },

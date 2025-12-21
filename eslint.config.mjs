@@ -1,15 +1,15 @@
 import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
 import * as wdio from 'eslint-plugin-wdio';
 import globals from 'globals';
+import prettierConfig from 'eslint-config-prettier';
 
 export default [
+    js.configs.recommended,
+    prettierConfig,
     {
         ignores: [
             'node_modules/**',
             'reports/**',
-            'api-tests/**',
-            'public/contrib/**',
             'dist/**',
             'coverage/**'
         ]
@@ -22,21 +22,14 @@ export default [
             globals: {
                 ...globals.browser,
                 ...globals.node,
-
-                // ESLint should not flag WebdriverIO globals
                 browser: 'readonly',
                 $: 'readonly',
                 $$: 'readonly',
                 expect: 'readonly'
             }
         },
-        plugins: {
-            wdio
-        },
+        plugins: { wdio },
         rules: {
-            ...js.configs.recommended.rules,
-            ...prettier.rules,
-
             'no-console': 'warn',
             'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
             'prefer-const': 'error',
@@ -47,6 +40,32 @@ export default [
             'quotes': ['error', 'single', { avoidEscape: true }],
             'indent': ['error', 4],
             'max-len': ['warn', { code: 126 }]
+        }
+    },
+    {
+        files: ['tests/**/*.js'],
+        languageOptions: {
+            ecmaVersion: 'latest',
+            sourceType: 'module',
+            globals: {
+                describe: 'readonly',
+                it: 'readonly',
+                before: 'readonly',
+                after: 'readonly',
+                beforeEach: 'readonly',
+                afterEach: 'readonly',
+                expect: 'readonly',
+                should: 'readonly',
+                assert: 'readonly'
+            }
+        },
+        rules: {
+            'no-console': 'off',
+            'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+            'prefer-const': 'error',
+            'semi': ['error', 'always'],
+            'quotes': ['error', 'single', { avoidEscape: true }],
+            'indent': ['error', 4]
         }
     }
 ];

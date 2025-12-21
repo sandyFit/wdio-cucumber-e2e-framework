@@ -20,8 +20,8 @@
   },
   "scripts": {
     "wdio": "wdio run src/config/wdio.conf.js",
-    "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix",
+    "lint": "eslint -c eslint.config.mjs src/**/*.js",
+    "lint:fix": "eslint -c eslint.config.mjs src/**/*.js --fix",
     "format": "prettier --write \"src/**/*.{js,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,json}\"",
     "report": "allure generate reports/allure-results --clean -o allure-report && allure open allure-report"
