@@ -31,6 +31,18 @@ Therefore, only **Chrome** and **Firefox** were configured — both in **headles
 ## **Project Structure**
 
 ```
+api-tests/
+ ├── config/
+ │    └── config.js  
+ ├── schemas/
+ │    └── schemas.js  
+ ├── services/
+ │    └── BookingService.js  
+ ├── tests/
+ │    └── booking.assertions.js  
+ │    └── booking.test.js  
+ ├── package.json
+ └── ...
 src/
  ├── business/
  │    ├── components/            # Reusable UI components

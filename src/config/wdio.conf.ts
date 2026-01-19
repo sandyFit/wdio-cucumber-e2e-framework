@@ -1,23 +1,10 @@
 import path from 'path';
-import * as hooks from "./allure-hooks.js";
+import { afterScenario, onComplete } from './allure-hooks';
 
 export const config = {
     baseUrl: 'https://practicesoftwaretesting.com',
-    //
-    // ====================
-    // Allure Hooks
-    // ====================
-    afterScenario: hooks.afterScenario,
-    onComplete: hooks.onComplete,
-    // ====================
-    // Runner Configuration
-    // ====================
     runner: 'local',
 
-    //
-    // ==================
-    // Test Files
-    // ==================
     specs: [
         path.resolve('./src/tests/features/**/signup.feature'),
         path.resolve('./src/tests/features/**/login.feature'),
@@ -29,76 +16,68 @@ export const config = {
         path.resolve('./src/tests/features/**/language.feature')
     ],
 
-    exclude: [],
+    maxInstances: 2,
 
-    //
-    // ====================
-    // Capabilities
-    // ====================
-    maxInstances: 2, // parallel sessions
-    maxInstancesPerCapability: 2,
-    
     capabilities: [
         {
-            maxInstances: 2,
             browserName: 'chrome',
-            'goog:chromeOptions': { args: ['--headless', '--disable-gpu'] }
-
+            'goog:chromeOptions': {
+                args: ['--headless', '--disable-gpu']
+            }
         },
         {
-            maxInstances: 2,
             browserName: 'firefox',
-            'moz:firefoxOptions': { args: ['-headless'] }
+            'moz:firefoxOptions': {
+                args: ['-headless']
+            }
         }
     ],
 
-    //
-    // ====================
-    // Test Configurations
-    // ====================
     logLevel: 'error',
     bail: 0,
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
     framework: 'cucumber',
-    // retry tests 2 times before failing
-    specFileRetries: 2, 
-    reporters: [
-        'spec', // Console output       
+    specFileRetries: 2,
 
-        // Allure Reporter 
-        [
-            "allure",
-            {
-                outputDir: "./reports/allure-results/",
-                disableWebdriverStepsReporting: true,
-                disableWebdriverScreenshotsReporting: false,
-                useCucumberStepReporter: true,
-            },
-        ],
+    reporters: [
+        'spec',
+        ['allure', {
+            outputDir: './reports/allure-results/',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,
+            useCucumberStepReporter: true,
+        }],
     ],
 
     cucumberOpts: {
         require: [
-            path.resolve('./src/tests/step-definitions/**/*.js'),
-            path.resolve('./src/tests/assertions/**/*.js')
+            path.resolve('./src/tests/step-definitions/**/*.ts'),
+            path.resolve('./src/tests/assertions/**/*.ts')
         ],
+        tagExpression: process.env.CUCUMBER_TAG || '',
+        timeout: 60000,
         backtrace: false,
-        dryRun: false,
-        failFast: false,
         snippets: true,
         source: true,
         strict: false,
-        tagExpression: '',
-        timeout: 60000,
         ignoreUndefinedDefinitions: false,
-        format: ['pretty'],
+    },
+
+    autoCompileOpts: {
+        autoCompile: true,
+        tsNodeOpts: {
+            transpileOnly: true,
+            project: './tsconfig.json'
+        }
     },
 
     // =====
     // Hooks
     // =====
+    afterScenario,
+    onComplete,
     // WebdriverIO provides several hooks you can use to interfere with the test process in order to enhance
     // it and to build services around it. You can either apply a single function or an array of
     // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got

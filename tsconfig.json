@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "types": [
+            "node",
+            "@wdio/globals/types"
+        ],
+        "outDir": "./dist",
+        "rootDir": ".",
+        "baseUrl": ".",
+        "skipLibCheck": true
+    },
+    "include": [
+        "src/**/*",
+        "wdio.conf.ts",
+        "allure-hooks.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "reports",
+        "api-tests/**/*" // Exclude API tests from TS compilation
+    ]
+}
