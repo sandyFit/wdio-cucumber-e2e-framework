@@ -1,3 +1,4 @@
+@ui @profile
 Feature: User Profile Management
 
     Scenario: Update User Profile information

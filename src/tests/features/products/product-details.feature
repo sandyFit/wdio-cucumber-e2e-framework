@@ -1,3 +1,4 @@
+@ui @product @smoke
 Feature: Product Details
     
     Scenario: View Product Details 

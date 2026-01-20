@@ -1,3 +1,4 @@
+    @ui @cart @smoke
     Feature: Add to cart
     
     Scenario: Add products to the cart

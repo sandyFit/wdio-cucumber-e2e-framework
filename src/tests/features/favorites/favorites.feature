@@ -1,3 +1,4 @@
+@ui @favorites
 Feature: Favorite Products
 
     Scenario: Add a product to Favorites

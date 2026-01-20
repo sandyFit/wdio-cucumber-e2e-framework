@@ -1,3 +1,4 @@
+@ui @i18n
 Feature: Language Switching
 
     Scenario: Change language on Home page

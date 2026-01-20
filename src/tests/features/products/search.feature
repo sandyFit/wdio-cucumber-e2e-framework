@@ -1,3 +1,4 @@
+@ui @search @smoke
 Feature: Search Product
 
     Scenario: Search for an exact product by name

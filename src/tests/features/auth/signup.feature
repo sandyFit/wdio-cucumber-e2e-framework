@@ -1,3 +1,4 @@
+@ui @auth @signup
 Feature: User Signup    
     
     Scenario: Successful Sign Up with valid data
