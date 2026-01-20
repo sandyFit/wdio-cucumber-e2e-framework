@@ -1,9 +1,11 @@
-import { BasePage } from '../basePage.js';
-import { logger } from '../../../core/logger/logger.js';
-import { waitForElementsCount } from '../../../core/browser/wait-helper.js';
+import { BasePage } from '../basePage';
+import { logger } from '../../../core/logger/logger';
+import { waitForElementsCount } from '../../../core/browser/wait-helper';
+
+type ElementType = any;
 
 export class HomePage extends BasePage {
-    selectors = {
+    private selectors = {
         filtersButton: '[data-test="filters"]',
         searchInput: '[data-test="search-query"]',
         searchButton: '[data-test="search-submit"]',
@@ -12,34 +14,32 @@ export class HomePage extends BasePage {
     };
 
     // === GETTERS ===
-    get filtersButton() {
+    get filtersButton(): ElementType {
         return $(this.selectors.filtersButton);
     }
 
-    get searchInput() {
+    get searchInput(): ElementType {
         return $(this.selectors.searchInput);
     }
 
-    get searchButton() {
+    get searchButton(): ElementType {
         return $(this.selectors.searchButton);
     }
 
-    get productCards() {
-        return $$(this.selectors.productCards);
-    }
-
     // === NAVIGATION ===
-    async open() {
+    async opn(): Promise<void> {
         await this.navigateTo('/');
         await this.waitForPageLoad();
-        await waitForElementsCount(() => this.productCards, 1, 10000);
+        await waitForElementsCount(async () => await $$(this.selectors.productCards), 1, 10_000);
 
-        const products = await this.productCards;
-        await products[0].waitForDisplayed({ timeout: 10000 });
+        const products = $$(this.selectors.productCards);
+        await products[0].waitForDisplayed({ timeout: 10_000 });
     }
 
+
+
     // === ACTIONS ===
-    async searchProduct(query) {
+    async searchProduct(query: string): Promise<void> {
         logger.info(`Searching product: ${query}`);
 
         const filtersVisible = await this.isElementDisplayed(this.filtersButton);
@@ -47,12 +47,12 @@ export class HomePage extends BasePage {
             await this.clickElement(this.filtersButton);
         }
 
-        const searchInput = await this.searchInput;
-        await this.setInputValueDirectly(searchInput, query, 'Search Input');
+        const searchInput = this.searchInput;
+        await this.setInputValueDirectly(searchInput, query);
 
         await this.pause(500);
 
-        const searchBtn = await this.searchButton;
+        const searchBtn = this.searchButton;
 
         await searchBtn.waitForExist({ timeout: 5000 });
         await this.scrollToElement(searchBtn);
@@ -61,33 +61,41 @@ export class HomePage extends BasePage {
         try {
             await this.clickElement(searchBtn);
         } catch (clickError) {
-            logger.info('⚠️ Normal click failed, using JavaScript click', clickError);
-            await this.executeScript((el) => el.click(), searchBtn);
+            const errorMsg = clickError instanceof Error ? clickError.message : String(clickError);
+            logger.info(`⚠️ Normal click failed, using JavaScript click: ${errorMsg}`);
+            await this.executeScript((el: any) => el.click(), searchBtn);
         }
     }
 
-    async waitForSearchResults() {
+    
+
+    async waitForSearchResults(): Promise<void> {
         await this.pause(1500);
 
-        await waitForElementsCount(() => this.getProducts(), 1, 10000);
+        await waitForElementsCount(() => this.getProducts(), 1, 10_000);
 
         const products = await this.getProducts();
-        logger.info(`Found ${products.length} products after search`);
 
-        if (products.length > 0) {
+        // Get the actual number of products by awaiting the length
+        const productCount = await products.length;
+
+        logger.info(`Found ${productCount} products after search`);
+
+        if (productCount > 0) {
             try {
                 await products[0].waitForDisplayed({ timeout: 5000 });
             } catch (error) {
-                logger.error('⚠️ First product visibility check failed, but continuing', error);
+                const errorMsg = error instanceof Error ? error.message : String(error);
+                logger.error(`⚠️ First product visibility check failed, but continuing: ${errorMsg}`);
             }
         }
     }
 
     async getProducts() {
-        return await this.productCards;
+        return $$(this.selectors.productCards);
     }
 
-    async getProductName(productElement) {
+    async getProductName(productElement: ElementType): Promise<string> {
         const nameElement = await productElement.$(this.selectors.productName);
 
         const exists = await this.waitForElementExist(nameElement, 1000);
@@ -117,17 +125,19 @@ export class HomePage extends BasePage {
         return '';
     }
 
-    async openProductDetails(productName) {
-        const productCards = await this.productCards;
+    async openProductDetails(productName: string): Promise<void> {
+        const productCards = $$(this.selectors.productCards);
 
-        for (let i = 0; i < productCards.length; i++) {
+        const productCount = await productCards.length;
+
+        for (let i = 0; i < productCount; i++) {
             const card = productCards[i];
 
             try {
-                await this.scrollToElement(card, `Product Card ${i}`);
+                await this.scrollToElement(card);
                 await this.pause(100);
 
-                const titleElement = await card.$(this.selectors.productName);
+                const titleElement = card.$(this.selectors.productName);
 
                 const exists = await this.waitForElementExist(titleElement, 500);
 

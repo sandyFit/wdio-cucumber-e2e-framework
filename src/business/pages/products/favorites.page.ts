@@ -1,8 +1,8 @@
-import { AccountPage } from '../account/account.page.js';
-import { logger } from '../../../core/logger/logger.js';
+import { AccountPage } from '../account/account.page';
+import { logger } from '../../../core/logger/logger';
 
 export class FavoritesPage extends AccountPage {
-    selectors = {
+    private selectors = {
         favoriteProductCard: '[data-test^="favorite-"]',
         removeFavoriteButton: '[data-test="delete"]',
     };
@@ -17,24 +17,24 @@ export class FavoritesPage extends AccountPage {
     }
 
     // === DATA GETTERS ===
-    async getFavoriteProducts() {
-        const products = await this.favoriteProductCards;
+    async getFavoriteProducts(): Promise<any> {
+        const products = (await this.favoriteProductCards) as any;
         logger.info(`Found ${products.length} favorite products`);
         return products;
     }
 
-    async getFavoriteProductsCount() {
+    async getFavoriteProductsCount(): Promise<number> {
         const products = await this.getFavoriteProducts();
         return products.length;
     }
 
     // === LOADERS ===
-    async waitForLoaded() {
+    async waitForLoaded(): Promise<void> {
         await this.waitForUrlToContain('/favorites', 10000);
 
         await browser.waitUntil(
             async () => {
-                const products = await this.favoriteProductCards;
+                const products = (await this.favoriteProductCards) as any;
                 return products.length > 0 && (await this.isElementDisplayed(products[0]));
             },
             {
@@ -45,14 +45,14 @@ export class FavoritesPage extends AccountPage {
     }
 
     // === NAVIGATION ===
-    async open() {
+    async open(): Promise<void> {
         await this.navigateTo('/account/favorites');
         await this.waitForPageLoad();
         await this.waitForLoaded();
     }
 
     // === CHECKERS ===
-    async isOnFavoritesPage() {
+    async isOnFavoritesPage(): Promise<boolean> {
         return await super.isOnFavoritesSection();
     }
 }

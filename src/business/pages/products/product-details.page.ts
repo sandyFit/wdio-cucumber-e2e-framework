@@ -1,9 +1,19 @@
-import { BasePage } from '../basePage.js';
-import { logger } from '../../../core/logger/logger.js';
-import { waitForElementsCount } from '../../../core/browser/wait-helper.js';
+import { BasePage } from '../basePage';
+import { logger } from '../../../core/logger/logger';
+import { waitForElementsCount } from '../../../core/browser/wait-helper';
+
+type ElementType = any;
+
+interface ProductInfo {
+    title: string;
+    price: string;
+    description: string;
+    category: string;
+    impact: string;
+}
 
 export class ProductDetailsPage extends BasePage {
-    selectors = {
+    private selectors = {
         title: '[data-test="product-name"]',
         price: '[data-test="unit-price"]',
         description: '[data-test="product-description"]',
@@ -15,49 +25,57 @@ export class ProductDetailsPage extends BasePage {
     };
 
     // === ELEMENT GETTERS ===
-    get titleEl() {
+    get titleEl(): ElementType {
         return $(this.selectors.title);
     }
-    get priceEl() {
+
+    get priceEl(): ElementType {
         return $(this.selectors.price);
     }
-    get descriptionEl() {
+
+    get descriptionEl(): ElementType {
         return $(this.selectors.description);
     }
-    get categoryEl() {
+
+    get categoryEl(): ElementType {
         return $(this.selectors.category);
     }
-    get impactEl() {
+
+    get impactEl(): ElementType {
         return $(this.selectors.impact);
     }
-    get addToFavoritesButtonEl() {
+
+    get addToFavoritesButtonEl(): ElementType {
         return $(this.selectors.addToFavoritesButton);
     }
+
     get productCards() {
         return $$(this.selectors.productCards);
     }
-    get addToCartButtonEl() {
+
+
+    get addToCartButtonEl(): ElementType {
         return $(this.selectors.addToCartButton);
     }
 
     // === LOADING ===
-    async waitForLoaded() {
+    async waitForLoaded(): Promise<void> {
         await this.titleEl.waitForDisplayed({ timeout: 10000 });
     }
 
     // === PRODUCT INFO ===
-    async getProductInfo() {
+    async getProductInfo(): Promise<ProductInfo> {
         return {
-            title: await this.getElementText(this.titleEl, 'Product Name'),
-            price: await this.getElementText(this.priceEl, 'Product Price'),
-            description: await this.getElementText(this.descriptionEl, 'Product Description'),
-            category: await this.getElementText(this.categoryEl, 'Product Category'),
-            impact: await this.getElementText(this.impactEl, 'Environmental Impact'),
+            title: await this.getElementText(this.titleEl),
+            price: await this.getElementText(this.priceEl),
+            description: await this.getElementText(this.descriptionEl),
+            category: await this.getElementText(this.categoryEl),
+            impact: await this.getElementText(this.impactEl),
         };
     }
 
     // === NAVIGATION ===
-    async open() {
+    async open(): Promise<void> {
         await this.navigateTo('/');
 
         await waitForElementsCount(() => this.productCards, 1, 10000);
@@ -69,7 +87,7 @@ export class ProductDetailsPage extends BasePage {
         await this.waitForLoaded();
     }
 
-    async openById(productId) {
+    async openById(productId: string | number): Promise<void> {
         logger.info(`Opening Product Details page for product ID: ${productId}`);
         await this.navigateTo(`/product/${productId}`);
         await this.waitForPageLoad();
@@ -77,30 +95,29 @@ export class ProductDetailsPage extends BasePage {
     }
 
     // === ACTIONS ===
-    async addToCart() {
+    async addToCart(): Promise<void> {
         await this.clickElement(this.addToCartButtonEl);
         await this.pause(1500);
         logger.info('Product added successfully');
     }
 
-    async addToFavorites() {
+    async addToFavorites(): Promise<void> {
         await this.clickElement(this.addToFavoritesButtonEl);
         await this.pause(1500);
         logger.info('Product added to favorites');
     }
 
-    async addToFavoritesAndCheck() {
+    async addToFavoritesAndCheck(): Promise<boolean> {
         await this.addToFavorites();
-
         await this.pause(1000);
 
         // Check if product was already in favorites
-        const bodyText = await this.getElementText($('body'), 'Page body');
+        const bodyText = await this.getElementText($('body'));
         const alreadyInFavorites =
             bodyText.toLowerCase().includes('already') || bodyText.toLowerCase().includes('existe');
 
         if (alreadyInFavorites) {
-            logger.info('ℹ️ Product is already in favorites list');
+            logger.info('Product is already in favorites list');
             return false;
         } else {
             logger.info('✅ Product added to favorites');
@@ -108,7 +125,7 @@ export class ProductDetailsPage extends BasePage {
         }
     }
 
-    async isOnProductDetailsPage() {
+    async isOnProductDetailsPage(): Promise<boolean> {
         const url = await this.getCurrentUrl();
         return url.includes('/product/');
     }

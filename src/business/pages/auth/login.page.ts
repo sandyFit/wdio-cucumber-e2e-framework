@@ -1,34 +1,34 @@
-import { BasePage } from '../basePage.js';
-import { logger } from '../../../core/logger/logger.js';
+import { BasePage } from '../basePage';
+import { logger } from '../../../core/logger/logger';
 
 export class LoginPage extends BasePage {
-    selectors = {
+    private selectors = {
         email: '[data-test="email"]',
         password: '[data-test="password"]',
         submit: '[data-test="login-submit"]',
     };
 
-    async open() {
+    async open(): Promise<void> {
         await this.navigateTo('/auth/login');
         await $(this.selectors.email).waitForDisplayed({ timeout: 10000 });
     }
 
-    async login(email, password) {
-        await this.clearAndFillInput(await $(this.selectors.email), email, 'Email');
-        await this.clearAndFillInput(await $(this.selectors.password), password, 'Password');
+    async login(email: string, password: string): Promise<void> {
+        await this.clearAndFillInput($(this.selectors.email), email);
+        await this.clearAndFillInput($(this.selectors.password), password);
 
-        const submitBtn = await $(this.selectors.submit);
+        const submitBtn = $(this.selectors.submit);
         await this.clickElement(submitBtn);
 
         await this.waitForUrlToContain('/account', 15000);
         logger.info('Successfully logged in and redirected to account page');
     }
 
-    async verifyOnLoginPage() {
+    async verifyOnLoginPage(): Promise<void> {
         await this.waitForUrlToContain('/auth/login');
     }
 
-    async isOnLoginPage() {
+    async isOnLoginPage(): Promise<boolean> {
         const url = await this.getCurrentUrl();
         return url.includes('/auth/login');
     }

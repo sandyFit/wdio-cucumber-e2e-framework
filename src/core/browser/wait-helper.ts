@@ -1,24 +1,25 @@
 export async function waitForUrlToContain(
-    path: string, 
+    path: string,
     timeout: number = 10_000
 ): Promise<boolean> {
-    return await browser.waitUntil(async () => (await browser.getUrl()).includes(path), {
-        timeout,
-        timeoutMsg: `URL did not contain "${path}" within ${timeout}ms`,
-    });
+    return await browser.waitUntil(
+        async () => (await browser.getUrl()).includes(path),
+        {
+            timeout,
+            timeoutMsg: `URL did not contain "${path}" within ${timeout}ms`,
+        }
+    );
 }
 
 export async function waitForElementVisible(
-    element: WebdriverIO.Element | (() => Promise<WebdriverIO.Element>),
+    element: any, // Let TypeScript infer
     timeout = 5_000
 ) {
-    const el = typeof element === 'function' ? await element() : element;
-    await el.waitForDisplayed({ timeout });
+    await element.waitForDisplayed({ timeout });
 }
 
-
 export async function waitForElementClickable(
-    element: WebdriverIO.Element,
+    element: any,
     timeout: number = 5_000
 ): Promise<void> {
     await element.waitForClickable({
@@ -28,7 +29,7 @@ export async function waitForElementClickable(
 }
 
 export async function waitForElementExist(
-    element: WebdriverIO.Element,
+    element: any,
     timeout: number = 5_000
 ): Promise<void> {
     await element.waitForExist({
@@ -38,7 +39,7 @@ export async function waitForElementExist(
 }
 
 export async function waitForTextInElement(
-    element: WebdriverIO.Element,
+    element: any,
     expectedText: string,
     timeout: number = 5_000
 ): Promise<void> {
@@ -54,10 +55,11 @@ export async function waitForTextInElement(
     );
 }
 
+
 export async function waitForElementsCount(
-    getElementsFn: () => Promise<WebdriverIO.ElementArray>,
+    getElementsFn: () => any, 
     minCount: number = 1,
-    timeout: number = 5_000
+    timeout: number = 5000
 ): Promise<boolean> {
     return await browser.waitUntil(
         async () => (await getElementsFn()).length >= minCount,
@@ -67,3 +69,4 @@ export async function waitForElementsCount(
         }
     );
 }
+

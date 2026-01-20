@@ -1,28 +1,27 @@
-import { BasePage } from '../basePage.js';
-import { HeaderComponent } from '../../components/common/header.component.js';
+import { BasePage } from '../basePage';
+import { HeaderComponent } from '../../components/common/header.component';
 
 export class AccountPage extends BasePage {
     constructor() {
         super();
-        this.header = new HeaderComponent();
     }
 
-    async open() {
+    async open(): Promise<void> {
         await this.navigateTo('/account');
         await this.waitForPageLoad();
     }
 
-    async isOnAccountPage() {
+    async isOnAccountPage(): Promise<boolean> {
         const url = await this.getCurrentUrl();
         return url.includes('/account');
     }
 
-    async isOnProfileSection() {
+    async isOnProfileSection(): Promise<boolean> {
         const url = await this.getCurrentUrl();
         return url.includes('/account/profile');
     }
 
-    async isOnFavoritesSection() {
+    async isOnFavoritesSection(): Promise<boolean> {
         const url = await this.getCurrentUrl();
         return url.includes('/favorites') || url.includes('/favourites');
     }

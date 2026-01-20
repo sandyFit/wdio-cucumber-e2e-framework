@@ -1,7 +1,23 @@
-import { BasePage } from '../basePage.js';
+import { BasePage } from '../basePage';
+
+type ElementType = any;
+
+interface UserData {
+    firstName?: string;
+    lastName?: string;
+    dob?: string;
+    street?: string;
+    postalCode?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    phone?: string;
+    email?: string;
+    password?: string;
+}
 
 export class SignupPage extends BasePage {
-    selectors = {
+    private selectors = {
         firstName: '[data-test="first-name"]',
         lastName: '[data-test="last-name"]',
         dob: '[data-test="dob"]',
@@ -19,57 +35,68 @@ export class SignupPage extends BasePage {
     // ----------------------------
     // Getters for elements
     // ----------------------------
-    get firstNameInput() {
+    get firstNameInput(): ElementType {
         return $(this.selectors.firstName);
     }
-    get lastNameInput() {
+
+    get lastNameInput(): ElementType {
         return $(this.selectors.lastName);
     }
-    get dobInput() {
+
+    get dobInput(): ElementType {
         return $(this.selectors.dob);
     }
-    get streetInput() {
+
+    get streetInput(): ElementType {
         return $(this.selectors.street);
     }
-    get postalInput() {
+
+    get postalInput(): ElementType {
         return $(this.selectors.postal);
     }
-    get cityInput() {
+
+    get cityInput(): ElementType {
         return $(this.selectors.city);
     }
-    get stateInput() {
+
+    get stateInput(): ElementType {
         return $(this.selectors.state);
     }
-    get countrySelect() {
+
+    get countrySelect(): ElementType {
         return $(this.selectors.country);
     }
-    get phoneInput() {
+
+    get phoneInput(): ElementType {
         return $(this.selectors.phone);
     }
-    get emailInput() {
+
+    get emailInput(): ElementType {
         return $(this.selectors.email);
     }
-    get passwordInput() {
+
+    get passwordInput(): ElementType {
         return $(this.selectors.password);
     }
-    get registerButton() {
+
+    get registerButton(): ElementType {
         return $(this.selectors.submit);
     }
 
     // ----------------------------
     // Actions
     // ----------------------------
-    async open() {
+    async open(): Promise<void> {
         await this.navigateTo('/auth/register');
         await this.waitForPageLoad();
         await this.waitForPageReady();
     }
 
-    async waitForPageReady() {
+    async waitForPageReady(): Promise<void> {
         await $(this.selectors.firstName).waitForDisplayed({ timeout: 10000 });
     }
 
-    async registerUser(data) {
+    async registerUser(data: UserData): Promise<void> {
         for (const [key, value] of Object.entries(data)) {
             if (!value) {
                 continue;
@@ -78,13 +105,13 @@ export class SignupPage extends BasePage {
             if (!element) {
                 continue;
             }
-            await this.fillField(element, value, key);
+            await this.fillField(element, value);
         }
 
         await this.clickRegister();
     }
 
-    getElementForKey(key) {
+    private getElementForKey(key: string): ElementType | null {
         switch (key) {
             case 'firstName':
                 return this.firstNameInput;
@@ -113,7 +140,7 @@ export class SignupPage extends BasePage {
         }
     }
 
-    async clickRegister() {
+    async clickRegister(): Promise<void> {
         await this.registerButton.waitForClickable({ timeout: 5000 });
         await this.clickElement(this.registerButton);
         await this.pause(1000);
