@@ -235,6 +235,26 @@ api-tests/reports/api-reports/api-test-report.html
 
 ---
 
+## Running Tests with Tags (Module 12)
+
+### Available Tags
+- `@smoke` - Quick smoke tests (~5 min)
+- `@ui` - Full test suite (~20 min)
+- `@auth` - Authentication tests
+- `@products` - Product-related tests
+
+### Examples
+```bash
+# Run smoke tests
+npm run test:ui:smoke
+
+# Run auth tests only
+npm run test:ui:auth
+
+# Run everything except slow tests
+npm run test:ui:not-slow
+
+
 ## License
 
 This project is part of the EPAM Testing Automation training program.
