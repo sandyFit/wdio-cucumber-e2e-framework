@@ -16,7 +16,7 @@ export const config = {
         path.resolve('./src/tests/features/**/language.feature')
     ],
 
-    maxInstances: 2,
+    maxInstances: 1,
 
     capabilities: [
         {

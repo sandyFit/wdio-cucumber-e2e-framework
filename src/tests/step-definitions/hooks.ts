@@ -1,8 +1,8 @@
 import { Before, After, BeforeAll, AfterAll } from '@wdio/cucumber-framework';
-import { logger } from '../../core/logger/logger.js';
-import { createNewUser } from '../../business/data/user-factory.js';
-import { LoginPage } from '../../business/pages/auth/login.page.js';
-import { SignupPage } from '../../business/pages/auth/signup.page.js';
+import { logger } from '../../core/logger/logger';
+import { createNewUser, User } from '../../business/data/user-factory';
+import { LoginPage } from '../../business/pages/auth/login.page';
+import { SignupPage } from '../../business/pages/auth/signup.page';
 
 const loginPage = new LoginPage();
 const signupPage = new SignupPage();
@@ -13,7 +13,7 @@ BeforeAll(async function () {
     logger.info('==============================================');
 });
 
-Before(async function ({ pickle }) {
+Before(async function (this: any, { pickle }) {
     logger.info(`🎬 Starting scenario: "${pickle.name}"`);
 
     await browser.setWindowSize(1920, 1080);
@@ -36,7 +36,7 @@ Before(async function ({ pickle }) {
         const isProfileTest = name.includes('profile') || name.includes('password');
 
         if (isProfileTest) {
-            const newUser = createNewUser();
+            const newUser: User = createNewUser();
 
             await signupPage.open();
             await signupPage.registerUser(newUser);
@@ -52,7 +52,7 @@ Before(async function ({ pickle }) {
             logger.info('✔ New user registered and logged in');
             this.currentUser = newUser;
         } else {
-            const newUser = createNewUser();
+            const newUser: User = createNewUser();
 
             await signupPage.open();
             await signupPage.registerUser(newUser);

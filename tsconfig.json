@@ -7,22 +7,26 @@
         "resolveJsonModule": true,
         "types": [
             "node",
-            "@wdio/globals/types"
+            "@wdio/globals/types",
+            "@wdio/cucumber-framework"
         ],
         "outDir": "./dist",
         "rootDir": ".",
         "baseUrl": ".",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "strict": true,
+        "noImplicitAny": false
     },
     "include": [
         "src/**/*",
         "wdio.conf.ts",
-        "allure-hooks.ts"
+        "allure-hooks.ts",
+        "types/**/*.d.ts" 
     ],
     "exclude": [
         "node_modules",
         "dist",
         "reports",
-        "api-tests/**/*" // Exclude API tests from TS compilation
+        "api-tests/**/*"
     ]
 }

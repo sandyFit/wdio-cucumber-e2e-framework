@@ -10,7 +10,14 @@ export class HomePage extends BasePage {
         searchInput: '[data-test="search-query"]',
         searchButton: '[data-test="search-submit"]',
         productCards: '[data-test^="product-"]',
-        productName: '[data-test="product-name"]',
+        productName: [
+            '[data-test="product-name"]',
+            '.product-title',
+            '.product-name',
+            'h3',
+            'h4',
+            'a[title]'
+        ],
     };
 
     // === GETTERS ===
@@ -27,7 +34,7 @@ export class HomePage extends BasePage {
     }
 
     // === NAVIGATION ===
-    async opn(): Promise<void> {
+    async open(): Promise<void> {
         await this.navigateTo('/');
         await this.waitForPageLoad();
         await waitForElementsCount(async () => await $$(this.selectors.productCards), 1, 10_000);
@@ -74,9 +81,8 @@ export class HomePage extends BasePage {
 
         await waitForElementsCount(() => this.getProducts(), 1, 10_000);
 
-        const products = await this.getProducts();
+        const products = this.getProducts();
 
-        // Get the actual number of products by awaiting the length
         const productCount = await products.length;
 
         logger.info(`Found ${productCount} products after search`);
@@ -91,43 +97,54 @@ export class HomePage extends BasePage {
         }
     }
 
-    async getProducts() {
+    getProducts() {
         return $$(this.selectors.productCards);
     }
 
+    async getUniqueProducts(): Promise<WebdriverIO.Element[]> {
+        return [...(this.getProducts())];
+    }
+
+
+
     async getProductName(productElement: ElementType): Promise<string> {
-        const nameElement = await productElement.$(this.selectors.productName);
+        for (const selector of this.selectors.productName) {
+            let el: WebdriverIO.Element;
 
-        const exists = await this.waitForElementExist(nameElement, 1000);
-
-        if (!exists) {
-            return '';
-        }
-
-        try {
-            const name = await nameElement.getText();
-            if (name && name.trim()) {
-                return name.trim();
+            try {
+                el = await productElement.$(selector);
+            } catch {
+                continue;
             }
-        } catch {
-            // Silent fail, try next method
-        }
 
-        try {
-            const name = await nameElement.getAttribute('textContent');
-            if (name && name.trim()) {
-                return name.trim();
+            if (!(await el.isExisting())) continue;
+
+            const text = (await el.getText()).trim();
+            if (text) return text;
+
+            const titleAttr = await el.getAttribute('title');
+            if (titleAttr?.trim()) return titleAttr.trim();
+
+            const aria = await el.getAttribute('aria-label');
+            if (aria?.trim()) return aria.trim();
+
+            try {
+                const span = el.$('span');
+                if (await span.isExisting()) {
+                    const spanText = (await span.getText()).trim();
+                    if (spanText) return spanText;
+                }
+            } catch {
+                continue;
             }
-        } catch {
-            // Silent fail
         }
 
         return '';
     }
 
-    async openProductDetails(productName: string): Promise<void> {
-        const productCards = $$(this.selectors.productCards);
 
+    async openProductDetails(productName: string): Promise<void> {
+        const productCards = this.getProducts();
         const productCount = await productCards.length;
 
         for (let i = 0; i < productCount; i++) {
@@ -137,18 +154,12 @@ export class HomePage extends BasePage {
                 await this.scrollToElement(card);
                 await this.pause(100);
 
-                const titleElement = card.$(this.selectors.productName);
+                const title = await this.getProductName(card);
 
-                const exists = await this.waitForElementExist(titleElement, 500);
-
-                if (!exists) {
-                    continue;
-                }
-
-                const title = await titleElement.getText();
+                if (!title) continue;
 
                 if (title.toLowerCase().includes(productName.toLowerCase())) {
-                    await this.clickElement(titleElement);
+                    await this.clickElement(card);
                     return;
                 }
             } catch {
@@ -158,4 +169,6 @@ export class HomePage extends BasePage {
 
         throw new Error(`Product "${productName}" not found in ${productCards.length} products`);
     }
+
+
 }

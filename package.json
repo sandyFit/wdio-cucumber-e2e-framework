@@ -2,6 +2,9 @@
   "name": "task2-wdio",
   "type": "module",
   "devDependencies": {
+    "@types/chai": "^5.2.3",
+    "@types/cucumber": "^6.0.1",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^25.0.9",
     "@wdio/allure-reporter": "^9.21.0",
     "@wdio/cli": "^9.20.1",

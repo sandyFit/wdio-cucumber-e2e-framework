@@ -1,4 +1,40 @@
-export function createNewUser() {
+export type User = {
+    firstName: string;
+    lastName: string;
+    dob: string;
+    street: string;
+    postalCode: string;
+    city: string;
+    state: string;
+    country: string;
+    phone: string;
+    email: string;
+    password: string;
+};
+
+export type UserCredentials = {
+    email: string;
+    password: string;
+};
+
+export type InvalidUser = UserCredentials;
+
+export type PasswordOptions = {
+    length?: number;
+    requireUpper?: boolean;
+    requireLower?: boolean;
+    requireNumber?: boolean;
+    requireSymbol?: boolean;
+};
+
+export type TestCredentials = {
+    getCurrentPassword: () => string;
+    getNewPassword: () => string;
+    updatePassword: (pwd: string) => void;
+    getEmail: () => string;
+};
+
+export function createNewUser(): User {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 1000);
 
@@ -17,14 +53,14 @@ export function createNewUser() {
     };
 }
 
-export function getExistingUser() {
+export function getExistingUser(): UserCredentials {
     return {
         email: 'customer@practicesoftwaretesting.com',
         password: 'welcome01',
     };
 }
 
-export function createInvalidUser() {
+export function createInvalidUser(): InvalidUser {
     return {
         email: 'invalid-email',
         password: '123',
@@ -37,7 +73,7 @@ export function generateRandomPassword({
     requireLower = true,
     requireNumber = true,
     requireSymbol = true,
-} = {}) {
+}: PasswordOptions = {}): string {
     const lower = 'abcdefghijklmnopqrstuvwxyz';
     const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '0123456789';
@@ -45,7 +81,7 @@ export function generateRandomPassword({
 
     // Collect required sets
     let requiredChars = '';
-    const allSets = [];
+    const allSets: string[] = [];
 
     if (requireLower) {
         requiredChars += lower.charAt(Math.floor(Math.random() * lower.length));
@@ -74,7 +110,7 @@ export function generateRandomPassword({
         result += allAllowed.charAt(Math.floor(Math.random() * allAllowed.length));
     }
 
-    // Shuffle result so required chars aren't all at the start
+    // Shuffle chars
     result = result
         .split('')
         .sort(() => Math.random() - 0.5)
@@ -83,14 +119,14 @@ export function generateRandomPassword({
     return result;
 }
 
-export function createTestCredentials(user) {
+export function createTestCredentials(user: User | UserCredentials): TestCredentials {
     let currentPassword = user.password;
     let newPassword = '';
 
     return {
         getCurrentPassword: () => currentPassword,
         getNewPassword: () => newPassword || currentPassword,
-        updatePassword: (pwd) => {
+        updatePassword: (pwd: string) => {
             currentPassword = pwd;
             newPassword = pwd;
         },
