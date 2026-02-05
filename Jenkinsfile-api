@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'NodeJS v20.19.3'
+    }
+
+    triggers {
+        cron('H */2 * * *')
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                dir('api-tests') {
+                    bat 'npm ci'
+                }
+            }
+        }
+
+        stage('Run API Tests') {
+            steps {
+                dir('api-tests') {
+                    bat 'npm test'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Publishing API test results...'
+
+            publishHTML(target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'api-tests/reports/api-reports',
+                reportFiles: 'api-test-report.html',
+                reportName: 'API Test Report'
+            ])
+        }
+
+        success {
+            echo '✅ API Tests Passed!'
+        }
+
+        failure {
+            echo '❌ API Tests Failed!'
+        }
+    }
+}

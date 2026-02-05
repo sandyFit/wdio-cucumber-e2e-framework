@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'NodeJS v20.19.3'
+    }
+
+    triggers {
+        cron('H */2 * * *')
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                bat 'npm ci'
+            }
+        }
+
+        stage('Run UI Tests') {
+            steps {
+                bat 'npx wdio run src/config/wdio.conf.js'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Publishing test results...'
+
+            // Allure Report
+            allure includeProperties: false,
+                   jdk: '',
+                   results: [[path: 'reports/allure-results']]
+        }
+
+        success {
+            echo '✅ UI Tests Passed!'
+        }
+
+        failure {
+            echo '❌ UI Tests Failed!'
+        }
+    }
+}
