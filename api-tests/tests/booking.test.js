@@ -74,7 +74,7 @@ describe("Restful-Booker API Tests", () => {
 
             const response = await bookingService.getAllBookingIds(filters);
 
-            assertResponse.statusCode(response, 300);
+            assertResponse.statusCode(response, 200);
 
             assertResponse.responseTime(response, 'medium');
 
