@@ -1,263 +1,243 @@
-# WebdriverIO BDD Test Automation Suite
+# wdio-cucumber-e2e-framework
 
-This project contains an automated test suite built using **WebdriverIO**, **Cucumber BDD**, and **Node.js**, following the structure and requirements of the EPAM Testing Specialization Module 4.
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![Node](https://img.shields.io/badge/node-%3E%3D18.x-blue) ![TypeScript](https://img.shields.io/badge/language-TypeScript-3178c6) ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
----
-
-## **Requirements**
-
-| Requirement                                            | Status                | Notes                                           |
-| ------------------------------------------------------ | --------------------- | ----------------------------------------------- |
-| 1. Walk through materials to understand WDIO           | ✔ Completed           | WDIO config & structure implemented             |
-| 2. Create initial WDIO setup locally                   | ✔ Completed           | Using Windows environment                       |
-| 3. Create WDIO config & get familiar                   | ✔ Completed           | Custom config included                          |
-| 4. Create first specs using BDD scenario from Module 2 | ✔ Completed           | All feature files under `/src/features`         |
-| 5. Execute tests in Chrome / Firefox / Safari headless | ⚠ Partially completed | Safari unavailable on Windows (explained below) |
-| 6. Execute tests in parallel (2 instances)             | ✔ Completed           | `maxInstances: 2`                               |
-| 7. Add option to retry failed tests twice              | ✔ Completed           | `specFileRetries: 2`                            |
-| 8. Push code & open Merge Request                      | ✔ Completed           | Ready for MR                                    |
+A scalable end-to-end test automation framework built with **WebdriverIO**, **Cucumber (BDD)**, and **TypeScript**. Validates both UI and API layers of web applications with a focus on maintainability, reliability, and fast feedback.
 
 ---
 
-## **Why Safari Was Not Added**
+## Table of Contents
 
-Safari WebDriver is **only supported on macOS**.
-Because this project was developed on **Windows**, attempts to run Safari tests would fail immediately.
-
-Therefore, only **Chrome** and **Firefox** were configured — both in **headless mode**, as required.
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Running Tests](#running-tests)
+- [CI/CD Integration](#cicd-integration)
+- [Reports](#reports)
+- [Test Strategy](#test-strategy)
+- [Known Limitations](#known-limitations)
 
 ---
 
-## **Project Structure**
+## Tech Stack
+
+| Layer | Tool |
+|---|---|
+| Test Framework | WebdriverIO |
+| BDD | Cucumber (Gherkin) |
+| Language | TypeScript |
+| Assertions | Chai |
+| Reporting | Allure, Mochawesome |
+| CI/CD | Jenkins |
+| Browsers | Chrome (Headless), Firefox (Headless) |
+
+---
+
+## Architecture
+
+The framework follows a clean, layered architecture that separates test intent from implementation:
 
 ```
-api-tests/
- ├── config/
- │    └── config.js  
- ├── schemas/
- │    └── schemas.js  
- ├── services/
- │    └── BookingService.js  
- ├── tests/
- │    └── booking.assertions.js  
- │    └── booking.test.js  
- ├── package.json
- └── ...
+tests (features)
+       ↓
+step definitions
+       ↓
+page objects / services
+       ↓
+    UI / API
+```
+
+**Key design patterns:**
+
+- **Page Object Model (POM)** — encapsulates UI selectors and interactions, keeping step definitions readable
+- **Service Layer** — isolates API logic from test cases for independent backend validation
+- **Data Layer** — centralized, typed test data factories reduce duplication and invalid inputs
+- **Reusable Components** — shared helpers and UI elements across the suite
+
+TypeScript is used throughout to catch errors at compile time, improve IDE support, and make refactoring safer.
+
+---
+
+## Project Structure
+
+```
 src/
  ├── business/
- │    ├── components/            # Reusable UI components
- │    ├── data/                  # Test data factories
- │    └── pages/                 # Page Objects
- │          ├── account/
- │          │    ├── account.page.js
- │          │    └── profile.page.js
- │          ├── auth/
- │          │    ├── login.page.js
- │          │    └── signup.page.js
- │          ├── home/
- │          │    └── home.page.js
- │          ├── products/
- │          │    ├── favorites.page.js
- │          │    └── product-details.page.js
- │          └── basePage.js      # Base class for all pages
+ │    ├── components/       # Reusable UI components
+ │    ├── data/             # Test data factories
+ │    └── pages/            # Page Object classes
+ │
+ ├── tests/
+ │    ├── features/         # Gherkin feature files
+ │    ├── step-definitions/ # Step implementations
+ │    └── hooks.js          # Before/After hooks
+ │
  ├── config/
- │    └── wdio.conf.js           # WDIO configuration
- ├── core/
- │    ├── browser/
- │    └── logger/
- └── tests/
-      ├── features/              # Gherkin .feature files
-      │    ├── auth/
-      │    │    ├── login.feature
-      │    │    └── signup.feature
-      │    ├── product/
-      │    │    ├── favorites.feature
-      │    │    └── search.feature
-      │    └── ui/
-      │         └── language.feature
-      ├── step-definitions/      # Step definitions (refactored)
-      │    ├── auth/
-      │    │    ├── login.steps.js
-      │    │    ├── profile.steps.js
-      │    │    └── signup.steps.js
-      │    ├── product/
-      │    │    ├── add2Cart.steps.js
-      │    │    ├── favorites.steps.js
-      │    │    └── product-details.steps.js
-      │    └── ui/
-      │         └── language.steps.js
-      └── hooks.js
-  └── hooks.js
-           
+ │    └── wdio.conf.js      # WebdriverIO configuration
+ │
+ └── core/
+      ├── browser/          # Browser utilities
+      └── logger/           # Logging helpers
+
+api-tests/
+ ├── services/              # API service abstractions
+ ├── schemas/               # JSON schema definitions
+ ├── tests/                 # API test specs
+ └── config/                # API test configuration
 ```
+
 ---
 
-## **Running the Tests**
+## Getting Started
 
-### Install dependencies:
+### Prerequisites
+
+- Node.js >= 18.x
+- npm >= 9.x
+
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-### Run all tests in headless mode:
+---
+
+## Running Tests
+
+### Run all UI tests
 
 ```bash
 npm run wdio
 ```
 
-### Run a specific feature:
+### Run a specific feature
 
 ```bash
-npm run wdio run wdio.conf.js --spec ./src/features/login.feature
+npx wdio run wdio.conf.js --spec ./src/features/login.feature
+```
+
+### Run by tag
+
+```bash
+# Smoke suite (~5 min)
+npm run test:ui:smoke
+
+# Authentication flows only
+npm run test:ui:auth
+
+# Product-related tests
+npm run test:ui:products
+
+# Exclude slow tests
+npm run test:ui:not-slow
+```
+
+**Available tags:** `@smoke`, `@ui`, `@auth`, `@products`
+
+### Run API tests
+
+```bash
+cd api-tests
+npm install
+npm run test:api
 ```
 
 ---
 
-## **WDIO Capabilities**
+## CI/CD Integration
+![Jenkins Pipeline](docs/images/jenkins-pipeline.png)
 
-Tests run in **parallel** using:
+The framework integrates with **Jenkins** for continuous test execution.
 
-### Chrome (Headless)
-
-* fast
-* stable
-* modern Chrome WebDriver
-
-### Firefox (Headless)
-
-* cross-browser validation
-* GeckoDriver support
-
-### Safari (Not supported on Windows)
-
-Safari WebDriver is excluded due to OS limitations.
+- Triggered automatically on build events
+- Supports targeted runs (smoke, regression) via parameterized builds
+- Allure and Mochawesome reports published post-execution
+- Enables early defect detection within the delivery pipeline
 
 ---
 
-## **Retry Logic**
+## Reports
 
-To improve test stability, each spec file is retried **up to 2 times**:
+### Allure (UI Tests)
+![Allure Report](docs/images/allure-report.png)
 
-```js
-specFileRetries: 2
-```
-
----
-
-## **Cucumber BDD**
-
-The framework uses:
-
-* Gherkin `.feature` files
-* Step definitions in `/steps`
-* Assertions in `/assertions`
-
-This helps maintain clean separation of **intent (Gherkin)** and **implementation (JS)**.
-
----
-
-## **Parallel Execution**
-
-WDIO is configured to run tests using:
-
-```js
-maxInstances: 2
-maxInstancesPerCapability: 2
-```
-
-This means **2 sessions across both Chrome and Firefox** can run simultaneously, improving performance.
-
----
-
-## Chai Integration (Module 5)
-- Added Chai for BDD and TDD style assertions
-- Implemented assert, expect, and should interfaces
-- Added new signup step using Chai
-
-
-## **Dependencies**
-
-Key packages used:
-
-These are the key packages used in this project:
-
-- `@wdio/cli` – WebdriverIO command line interface for running tests.
-- `@wdio/local-runner` – Allows tests to run locally on your machine.
-- `@wdio/cucumber-framework` – Integrates Cucumber with WebdriverIO for BDD-style tests.
-- `@wdio/spec-reporter` – Provides readable test output in the terminal.
-- `@wdio/chromedriver-service` – Manages ChromeDriver for running tests in Chrome.
-- `@wdio/firefox-profile-service` – Manages Firefox profiles for test execution.
-- `chai` – Assertion library for validating test results.
-
----
-
-## Reports (Module 9)
-
-### Spec Report
-Test execution results are displayed in the console using the `spec` reporter.
-
-
-### Allure Report
-
-After running the tests, you can generate and open the Allure HTML report using the following command:
+Generate and open the HTML report after a test run:
 
 ```bash
 npm run report
 ```
 
-This command will:
+> Generated report files are excluded from version control.
 
-* Generate the Allure HTML report from the raw results
-* Open the report automatically in your browser
-
-> Note: The generated report files are created locally and are excluded from version control.
-
-### API Test Reports (Mochawesome)
-
-API tests use **Mocha + Chai** with the **Mochawesome** HTML reporter.
-
-To generate the API HTML report:
+### Mochawesome (API Tests)
+![Mochawesome Report](docs/images/mochawesome-report.png)
 
 ```bash
 cd api-tests
 npm run test:api:report
 ```
 
-The report will be generated at:
+Report output: `api-tests/reports/api-reports/api-test-report.html`
 
-```text
-api-tests/reports/api-reports/api-test-report.html
-```
-
-> API report files are generated locally and excluded from Git.
-
+> API report files are excluded from version control.
 
 ---
 
-## Running Tests with Tags (Module 12)
+## Test Strategy
 
-### Available Tags
-- `@smoke` - Quick smoke tests (~5 min)
-- `@ui` - Full test suite (~20 min)
-- `@auth` - Authentication tests
-- `@products` - Product-related tests
+### Scope
 
-### Examples
-```bash
-# Run smoke tests
-npm run test:ui:smoke
+| Area | Coverage |
+|---|---|
+| Authentication | Login, signup flows |
+| Product features | Search, favorites, product detail |
+| UI behavior | Language switching |
+| API | Booking workflow endpoints |
 
-# Run auth tests only
-npm run test:ui:auth
+### Test Types
 
-# Run everything except slow tests
-npm run test:ui:not-slow
+- **Smoke** — critical paths, fast feedback
+- **Functional** — feature-level validation
+- **Regression** — full suite
+- **API** — backend validation, independent of UI
 
+### Execution Configuration
+
+```js
+maxInstances: 2
+maxInstancesPerCapability: 2
+specFileRetries: 2
+```
+
+Parallel execution and retry support are configured for speed and stability. Cross-browser coverage includes Chrome and Firefox (both headless). Safari is excluded due to macOS-only WebDriver constraints.
+
+### Stability Practices
+
+- Explicit/implicit waits over hard-coded delays
+- Stable, semantic selectors
+- Test independence — no shared state between specs
+- Retries as a fallback, not a substitute for root cause fixes
+
+---
+
+## Known Limitations
+
+- Retry mechanism mitigates flaky tests but does not replace addressing root causes
+- Negative and edge case coverage is limited in the current suite
+
+### Planned Improvements
+
+- Expand negative and boundary test scenarios
+- Add screenshot and log capture to failure reports
+- Improve test data management and isolation
+
+---
 
 ## License
 
-This project is part of the EPAM Testing Automation training program.
+MIT
 
 
 
