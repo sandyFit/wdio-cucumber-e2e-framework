@@ -147,7 +147,7 @@ npm run test:api
 ---
 
 ## CI/CD Integration
-![Jenkins Pipeline](docs/images/jenkins-pipeline.png)
+![Jenkins Pipeline](./docs/images/jenkins-pipeline.png)
 
 The framework integrates with **Jenkins** for continuous test execution.
 
