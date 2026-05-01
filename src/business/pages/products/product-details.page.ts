@@ -22,6 +22,7 @@ export class ProductDetailsPage extends BasePage {
         addToFavoritesButton: '[data-test="add-to-favorites"]',
         productCards: '[data-test^="product-"]',
         addToCartButton: '[data-test="add-to-cart"]',
+        toastContainer: '#toast-container'
     };
 
     // === ELEMENT GETTERS ===
@@ -57,6 +58,10 @@ export class ProductDetailsPage extends BasePage {
     get addToCartButtonEl(): ElementType {
         return $(this.selectors.addToCartButton);
     }
+    
+    get toastContainerEl(): ElementType {
+        return $(this.selectors.toastContainer);
+    }
 
     // === LOADING ===
     async waitForLoaded(): Promise<void> {
@@ -80,7 +85,7 @@ export class ProductDetailsPage extends BasePage {
 
         await waitForElementsCount(() => this.productCards, 1, 10000);
 
-        const firstProduct = (await this.productCards)[0];
+        const firstProduct = (this.productCards)[0];
         await firstProduct.scrollIntoView();
         await firstProduct.$('[data-test="product-name"]').click();
 

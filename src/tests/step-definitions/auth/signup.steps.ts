@@ -22,10 +22,10 @@ When(/^clicks the Register button$/, async function () {
 });
 
 Then(/^the system should create a new account$/, async function () {
-    await loginPage.verifyOnLoginPage();
+    await signupPage.verifyRegistrationSuccess();
 });
 
 Then(/^redirect to the Login page$/, async function () {
-    const url = await loginPage.getCurrentUrl();
-    expect(url).to.include('/auth/login', 'Should redirect to login page after registration');
+    const url = await signupPage.getCurrentUrl();
+    expect(url).to.include('/account', 'Should redirect to account page after registration');
 });

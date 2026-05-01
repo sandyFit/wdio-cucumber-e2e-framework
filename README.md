@@ -6,6 +6,15 @@ A scalable end-to-end test automation framework built with **WebdriverIO**, **Cu
 
 ---
 
+## Documentation
+
+| Document | Description |
+|---|---|
+| [Test Strategy](docs/TEST_STRATEGY.md) | Testing philosophy, approach, risk prioritization, and standards |
+| [Test Plan](docs/TEST_PLAN.md) | Scope, objectives, deliverables, and execution summary |
+
+---
+
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
@@ -147,7 +156,6 @@ npm run test:api
 ---
 
 ## CI/CD Integration
-![Jenkins Pipeline](./docs/images/jenkins-pipeline.png)
 
 The framework integrates with **Jenkins** for continuous test execution.
 
@@ -156,12 +164,17 @@ The framework integrates with **Jenkins** for continuous test execution.
 - Allure and Mochawesome reports published post-execution
 - Enables early defect detection within the delivery pipeline
 
+### UI Pipeline
+![Jenkins UI Pipeline](docs/images/jenkins-ui-pipeline.png)
+
+### API Pipeline
+![Jenkins API Pipeline](docs/images/jenkins-api-pipeline.png)
+
 ---
 
 ## Reports
 
 ### Allure (UI Tests)
-![Allure Report](docs/images/allure-report.png)
 
 Generate and open the HTML report after a test run:
 
@@ -169,10 +182,11 @@ Generate and open the HTML report after a test run:
 npm run report
 ```
 
+![Allure Report](docs/images/allure-report.png)
+
 > Generated report files are excluded from version control.
 
 ### Mochawesome (API Tests)
-![Mochawesome Report](docs/images/mochawesome-report.png)
 
 ```bash
 cd api-tests
@@ -180,6 +194,8 @@ npm run test:api:report
 ```
 
 Report output: `api-tests/reports/api-reports/api-test-report.html`
+
+![Mochawesome Report](docs/images/mochawesome-report.png)
 
 > API report files are excluded from version control.
 
@@ -238,6 +254,3 @@ Parallel execution and retry support are configured for speed and stability. Cro
 ## License
 
 MIT
-
-
-

@@ -4,6 +4,7 @@ export type User = {
     dob: string;
     street: string;
     postalCode: string;
+    houseNumber: string;
     city: string;
     state: string;
     country: string;
@@ -43,7 +44,8 @@ export function createNewUser(): User {
         lastName: `Doe${random}`,
         dob: '2000-01-01',
         street: 'Siempreviva Avenue',
-        postalCode: '666666',
+        houseNumber: '742',  
+        postalCode: '12345',
         city: 'Springfield',
         state: 'Delaware',
         country: 'United States of America (the)',

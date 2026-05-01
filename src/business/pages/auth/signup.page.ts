@@ -1,4 +1,5 @@
 import { BasePage } from '../basePage';
+import { logger } from '../../../core/logger/logger';
 
 type ElementType = any;
 
@@ -22,6 +23,7 @@ export class SignupPage extends BasePage {
         lastName: '[data-test="last-name"]',
         dob: '[data-test="dob"]',
         street: '[data-test="street"]',
+        houseNumber: '[data-test="house_number"]',
         postal: '[data-test="postal_code"]',
         city: '[data-test="city"]',
         state: '[data-test="state"]',
@@ -49,6 +51,10 @@ export class SignupPage extends BasePage {
 
     get streetInput(): ElementType {
         return $(this.selectors.street);
+    }
+
+    get houseNumberInput(): ElementType {
+        return $(this.selectors.houseNumber);
     }
 
     get postalInput(): ElementType {
@@ -121,6 +127,8 @@ export class SignupPage extends BasePage {
                 return this.dobInput;
             case 'street':
                 return this.streetInput;
+            case 'houseNumber':
+                return this.houseNumberInput;
             case 'postalCode':
                 return this.postalInput;
             case 'city':
@@ -144,5 +152,10 @@ export class SignupPage extends BasePage {
         await this.registerButton.waitForClickable({ timeout: 5000 });
         await this.clickElement(this.registerButton);
         await this.pause(1000);
+    }
+
+    async verifyRegistrationSuccess(): Promise<void> {
+        await this.waitForUrlToContain('/account', 15000);
+        logger.info('Registration successful - redirected to account page');
     }
 }

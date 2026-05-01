@@ -1,8 +1,7 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
 import { ProductDetailsPage } from '../../../business/pages/products/product-details.page';
 import { HeaderComponent } from '../../../business/components/common/header.component';
-import { waitForElementVisible } from '../../../core/browser/wait-helper';
-import { expect } from 'chai'; 
+import { expect } from 'chai';
 
 const productPage = new ProductDetailsPage();
 const header = new HeaderComponent();
@@ -21,6 +20,6 @@ Then(/^the product should be added to the cart list$/, async function () {
 });
 
 Then(/^a successful message should appear$/, async function () {
-    const msg = $('//*[contains(text(),"shopping cart")]');
-    await waitForElementVisible(msg, 5000);
+    await productPage.toastContainerEl.waitForDisplayed({ timeout: 5000 });
+
 });

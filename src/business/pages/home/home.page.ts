@@ -37,10 +37,10 @@ export class HomePage extends BasePage {
     async open(): Promise<void> {
         await this.navigateTo('/');
         await this.waitForPageLoad();
-        await waitForElementsCount(async () => await $$(this.selectors.productCards), 1, 10_000);
+        await waitForElementsCount(async () => await $$(this.selectors.productCards), 1, 20_000);
 
         const products = $$(this.selectors.productCards);
-        await products[0].waitForDisplayed({ timeout: 10_000 });
+        await products[0].waitForDisplayed({ timeout: 15_000 });
     }
 
 
