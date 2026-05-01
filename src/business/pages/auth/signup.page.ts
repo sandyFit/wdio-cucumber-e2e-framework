@@ -8,6 +8,7 @@ interface UserData {
     lastName?: string;
     dob?: string;
     street?: string;
+    houseNumber: string,
     postalCode?: string;
     city?: string;
     state?: string;
@@ -103,15 +104,29 @@ export class SignupPage extends BasePage {
     }
 
     async registerUser(data: UserData): Promise<void> {
-        for (const [key, value] of Object.entries(data)) {
-            if (!value) {
-                continue;
-            }
-            const element = this.getElementForKey(key);
-            if (!element) {
-                continue;
-            }
-            await this.fillField(element, value);
+        // 1. Fill basic info first
+        await this.fillField(this.firstNameInput, data.firstName ?? '');
+        await this.fillField(this.lastNameInput, data.lastName ?? '');
+        await this.fillField(this.dobInput, data.dob ?? '');
+        await this.fillField(this.phoneInput, data.phone ?? '');
+        await this.fillField(this.emailInput, data.email ?? '');
+        await this.fillField(this.passwordInput, data.password ?? '');
+
+        // 2. Select country first — triggers auto-fill
+        if (data.country) {
+            await this.countrySelect.selectByVisibleText(data.country);
+            await this.pause(1500); // wait for auto-fill to kick in
+        }
+
+        // 3. Enter postal code — triggers street/city/state auto-fill
+        if (data.postalCode) {
+            await this.fillField(this.postalInput, data.postalCode ?? '');
+            await this.pause(2000); // wait for auto-fill to populate fields
+        }
+
+        // 4. Enter house number — only manual field left
+        if (data.houseNumber) {
+            await this.fillField(this.houseNumberInput, data.houseNumber ?? '');
         }
 
         await this.clickRegister();

@@ -2,15 +2,15 @@ export type User = {
     firstName: string;
     lastName: string;
     dob: string;
-    street: string;
-    postalCode: string;
     houseNumber: string;
-    city: string;
-    state: string;
+    postalCode: string;
     country: string;
     phone: string;
     email: string;
     password: string;
+    street?: string;   
+    city?: string;     
+    state?: string;    
 };
 
 export type UserCredentials = {
@@ -43,15 +43,13 @@ export function createNewUser(): User {
         firstName: 'John',
         lastName: `Doe${random}`,
         dob: '2000-01-01',
-        street: 'Siempreviva Avenue',
-        houseNumber: '742',  
+        houseNumber: '742',
         postalCode: '12345',
-        city: 'Springfield',
-        state: 'Delaware',
         country: 'United States of America (the)',
         phone: '9123456789',
         email: `user_${timestamp}@example.com`,
         password: `PassWord$%${random}`,
+        // street, city, state removed — auto-filled by the form
     };
 }
 
