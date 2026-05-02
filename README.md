@@ -15,6 +15,27 @@ A scalable end-to-end test automation framework built with **WebdriverIO**, **Cu
 
 ---
 
+## Branch Structure
+
+This project was developed incrementally as part of a structured QA automation 
+training program. Each branch represents a distinct learning module and builds 
+on the previous one, reflecting real-world incremental development practices.
+
+| Branch | Module | Description |
+|---|---|---|
+| `wdio-test` | Foundation | Initial WebdriverIO setup and first test configurations |
+| `feat/pom-tef-structure` | Architecture | Page Object Model structure and base framework design |
+| `pom` | Page Objects | Full POM implementation with base page class and page objects |
+| `chai-integration` | Assertions | Chai assertion library integration and custom assertion helpers |
+| `ts-cucumber` | BDD + TypeScript | TypeScript migration and Cucumber BDD with Gherkin feature files |
+| `linters` | Code Quality | ESLint and Prettier configuration for consistent code style |
+| `api-tests` | API Testing | Service layer, schema validation, and Mocha + Chai API test suite |
+| `test-reporters` | Reporting | Allure (UI) and Mochawesome (API) reporter integration |
+| `jenkins` | CI/CD + Maintenance | Jenkins pipelines, bug fixes, framework hardening, and documentation |
+| `main` | Final State | Production-ready branch — represents the complete framework |
+
+---
+
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
