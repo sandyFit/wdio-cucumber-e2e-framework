@@ -7,12 +7,12 @@ interface UserData {
     firstName?: string;
     lastName?: string;
     dob?: string;
-    street?: string;
-    houseNumber: string,
+    country?: string;
     postalCode?: string;
+    houseNumber: string,
+    street?: string;
     city?: string;
     state?: string;
-    country?: string;
     phone?: string;
     email?: string;
     password?: string;
@@ -23,12 +23,12 @@ export class SignupPage extends BasePage {
         firstName: '[data-test="first-name"]',
         lastName: '[data-test="last-name"]',
         dob: '[data-test="dob"]',
-        street: '[data-test="street"]',
-        houseNumber: '[data-test="house_number"]',
+        country: '[data-test="country"]',
         postal: '[data-test="postal_code"]',
+        houseNumber: '[data-test="house_number"]',
+        street: '[data-test="street"]',
         city: '[data-test="city"]',
         state: '[data-test="state"]',
-        country: '[data-test="country"]',
         phone: '[data-test="phone"]',
         email: '[data-test="email"]',
         password: '[data-test="password"]',
@@ -104,30 +104,37 @@ export class SignupPage extends BasePage {
     }
 
     async registerUser(data: UserData): Promise<void> {
-        // 1. Fill basic info first
+        // 1. Personal info
         await this.fillField(this.firstNameInput, data.firstName ?? '');
         await this.fillField(this.lastNameInput, data.lastName ?? '');
         await this.fillField(this.dobInput, data.dob ?? '');
-        await this.fillField(this.phoneInput, data.phone ?? '');
-        await this.fillField(this.emailInput, data.email ?? '');
-        await this.fillField(this.passwordInput, data.password ?? '');
 
-        // 2. Select country first — triggers auto-fill
+        // 2. Select country — triggers address auto-fill API call
         if (data.country) {
             await this.countrySelect.selectByVisibleText(data.country);
-            await this.pause(1500); // wait for auto-fill to kick in
         }
 
-        // 3. Enter postal code — triggers street/city/state auto-fill
+        // 3. Fill postal code and house number together
         if (data.postalCode) {
             await this.fillField(this.postalInput, data.postalCode ?? '');
-            await this.pause(2000); // wait for auto-fill to populate fields
         }
-
-        // 4. Enter house number — only manual field left
         if (data.houseNumber) {
             await this.fillField(this.houseNumberInput, data.houseNumber ?? '');
         }
+
+        // 4. Wait for street to be auto-filled before continuing
+        await browser.waitUntil(
+            async () => {
+                const value = await this.streetInput.getValue();
+                return value !== '';
+            },
+            { timeout: 20_000, timeoutMsg: 'Street field was not auto-filled within 20 seconds' }
+        );
+
+        // 5. Contact info — after address is resolved
+        await this.fillField(this.phoneInput, data.phone ?? '');
+        await this.fillField(this.emailInput, data.email ?? '');
+        await this.fillField(this.passwordInput, data.password ?? '');
 
         await this.clickRegister();
     }
@@ -140,18 +147,18 @@ export class SignupPage extends BasePage {
                 return this.lastNameInput;
             case 'dob':
                 return this.dobInput;
-            case 'street':
-                return this.streetInput;
-            case 'houseNumber':
-                return this.houseNumberInput;
+            case 'country':
+                return this.countrySelect;
             case 'postalCode':
                 return this.postalInput;
+            case 'houseNumber':
+                return this.houseNumberInput;
+            case 'street':
+                return this.streetInput;
             case 'city':
                 return this.cityInput;
             case 'state':
                 return this.stateInput;
-            case 'country':
-                return this.countrySelect;
             case 'phone':
                 return this.phoneInput;
             case 'email':
@@ -170,7 +177,7 @@ export class SignupPage extends BasePage {
     }
 
     async verifyRegistrationSuccess(): Promise<void> {
-        await this.waitForUrlToContain('/account', 15000);
-        logger.info('Registration successful - redirected to account page');
+        await this.waitForUrlToContain('/auth/login', 15_000);
+        logger.info('Registration successful - redirected to login page');
     }
 }

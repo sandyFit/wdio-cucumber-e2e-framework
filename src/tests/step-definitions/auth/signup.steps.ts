@@ -27,5 +27,5 @@ Then(/^the system should create a new account$/, async function () {
 
 Then(/^redirect to the Login page$/, async function () {
     const url = await signupPage.getCurrentUrl();
-    expect(url).to.include('/account', 'Should redirect to account page after registration');
+    expect(url).to.include('/auth/login', 'Should redirect to account page after registration');
 });

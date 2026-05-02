@@ -2,9 +2,9 @@ export type User = {
     firstName: string;
     lastName: string;
     dob: string;
-    houseNumber: string;
-    postalCode: string;
     country: string;
+    postalCode: string;
+    houseNumber: string;
     phone: string;
     email: string;
     password: string;
@@ -43,9 +43,9 @@ export function createNewUser(): User {
         firstName: 'John',
         lastName: `Doe${random}`,
         dob: '2000-01-01',
-        houseNumber: '742',
-        postalCode: '12345',
         country: 'United States of America (the)',
+        postalCode: '12345',
+        houseNumber: '742',
         phone: '9123456789',
         email: `user_${timestamp}@example.com`,
         password: `PassWord$%${random}`,
