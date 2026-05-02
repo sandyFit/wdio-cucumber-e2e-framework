@@ -10,7 +10,7 @@ export class LoginPage extends BasePage {
 
     async open(): Promise<void> {
         await this.navigateTo('/auth/login');
-        await $(this.selectors.email).waitForDisplayed({ timeout: 10000 });
+        await $(this.selectors.email).waitForDisplayed({ timeout: 10_000 });
     }
 
     async login(email: string, password: string): Promise<void> {
@@ -20,7 +20,7 @@ export class LoginPage extends BasePage {
         const submitBtn = $(this.selectors.submit);
         await this.clickElement(submitBtn);
 
-        await this.waitForUrlToContain('/account', 15000);
+        await this.waitForUrlToContain('/account', 15_000);
         logger.info('Successfully logged in and redirected to account page');
     }
 
