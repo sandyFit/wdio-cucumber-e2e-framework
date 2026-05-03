@@ -17,3 +17,4 @@ errorShots/
 
 # Logs
 wdio-*.log
+debug/
